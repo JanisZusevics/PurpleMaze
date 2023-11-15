@@ -1,13 +1,10 @@
 using UnityEngine;
 using System.Collections;
-using System.Linq;
 
 public class HammerManager : MonoBehaviour
 {
     public GameObject hammerPrefab;
-    public GameObject[] players;
-    private Vector3 averagePosition;
-
+    public GameManager gameManager; // Add this line
     public float timeMin = 0.0f;
     public float timeMax = 2.0f;
 
@@ -23,20 +20,10 @@ public class HammerManager : MonoBehaviour
         SpawnHammerStrike();
     }
 
-    void Update()
-    {
-        players = GameObject.FindGameObjectsWithTag("Player")
-            .Where(player => player.GetComponent<PlayerMovement>().isActive)
-            .ToArray();   
-            averagePosition = GetAveragePosition();
-            
-         }
-            
-
     private void SpawnHammerStrike()
     {
-        Debug.Log("Attempting to spawn a hammer strike...");
-        
+        Vector3 averagePosition = GetPlayerAverageLocation(); // Update this line
+
         if (averagePosition != Vector3.zero)
         {
             averagePosition.y = 0; // Set y-coordinate to 0
@@ -69,19 +56,8 @@ public class HammerManager : MonoBehaviour
         SpawnHammerStrike();
     }
 
-    private Vector3 GetAveragePosition()
+    private Vector3 GetPlayerAverageLocation()
     {
-        if (players.Length == 0)
-        {
-            return Vector3.zero;
-        }
-
-        Vector3 sum = Vector3.zero;
-        foreach (GameObject player in players)
-        {
-            sum += player.transform.position;
-        }
-
-        return sum / players.Length;
+        return gameManager.playerAverageLocation;
     }
 }

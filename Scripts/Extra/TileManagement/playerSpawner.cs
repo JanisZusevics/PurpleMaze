@@ -4,17 +4,18 @@ using System.Collections;
 public class PlayerSpawner : MonoBehaviour
 {
     public GameObject playerPrefab; // The player prefab to spawn
-    public GameObject tile; // The tile to spawn the player on
     public float spawnInterval = 5f; // The interval between spawns
 
     private Vector3 tileSize; // The size of the tile
 
+    // Start is called before the first frame update
     void Start()
     {
-        tileSize = tile.GetComponent<Renderer>().bounds.size;
-        StartCoroutine(SpawnPlayer());
+        tileSize = GetComponent<Renderer>().bounds.size; // Get the size of the tile
+        StartCoroutine(SpawnPlayer()); // Start spawning players
     }
 
+    // Spawn a player at a random position on the tile
     IEnumerator SpawnPlayer()
     {
         while (true)
@@ -22,9 +23,9 @@ public class PlayerSpawner : MonoBehaviour
             float x = NextGaussian(0, tileSize.x / 4);
             float z = NextGaussian(0, tileSize.z / 4);
 
-            Vector3 spawnPosition = new Vector3(x, 0, z);
+            Vector3 spawnPosition = new Vector3(x, 1.0f, z);
 
-            Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+            Instantiate(playerPrefab, transform.position + spawnPosition, Quaternion.identity);
 
             yield return new WaitForSeconds(spawnInterval);
         }

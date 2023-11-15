@@ -17,6 +17,8 @@ public class HammerStrike : MonoBehaviour
     public event StrikeEndHandler OnStrikeEnd;
 
     public ParticleSystem smokeEffectPrefab;
+    private ParticleSystem smokeEffect;
+    public float smokeDelay = 2.0f; // Reference to the instantiated smoke effect
 
     private enum State
     {
@@ -86,27 +88,25 @@ public class HammerStrike : MonoBehaviour
         if (timer <= 0)
         {
             currentState = State.Striking;
-            strikeCollider.enabled = true;
+            //strikeCollider.enabled = true;
         }
     }
 
     private void PerformStrike()
     {
-        // Perform the strike and start the retreat
-        Debug.Log("Hammer Strike!");
 
         // Change the y scale of the hammer
         transform.localScale = new Vector3(transform.localScale.x, 2, transform.localScale.z);
 
         // Enable the strike collider to delete players
-        strikeCollider.enabled = true;
+        //strikeCollider.enabled = true;
 
         // Create a second, larger collider
         float launchRadius = hammerDiameter * 4;
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, launchRadius);
 
         // Instantiate the smoke effect
-        ParticleSystem smokeEffect = Instantiate(smokeEffectPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
+        smokeEffect = Instantiate(smokeEffectPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
         smokeEffect.transform.localScale = new Vector3(hammerDiameter, hammerDiameter, hammerDiameter); // Scale the smoke effect to match the launch radius
         // Apply an upward force to player objects
         foreach (Collider hitCollider in hitColliders)
@@ -142,12 +142,14 @@ public class HammerStrike : MonoBehaviour
         // Disable the renderer and destroy the GameObject
         hammerRenderer.enabled = false;
         Destroy(gameObject);
+        StartCoroutine(DestroySmokeEffectAfterDelay(smokeDelay));
+
     }
 
     IEnumerator EnableColliderDuringStrike()
     {
         // Enable the collider, wait for the strike duration, then disable the collider
-        strikeCollider.enabled = true;
+        //strikeCollider.enabled = true;
         yield return new WaitForSeconds(strikeDuration);
         strikeCollider.enabled = false;
             }
@@ -157,6 +159,11 @@ public class HammerStrike : MonoBehaviour
         // Wait for the strike duration, then start the cleanup
         yield return new WaitForSeconds(strikeDuration);
         currentState = State.CleaningUp;
+    }
+    IEnumerator DestroySmokeEffectAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Destroy(smokeEffect.gameObject);
     }
 
     void OnTriggerEnter(Collider other)

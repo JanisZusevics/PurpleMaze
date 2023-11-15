@@ -100,9 +100,9 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.5000001
   m_Height: 2
@@ -127,3 +127,4 @@ MonoBehaviour:
   telegraphDuration: 1.35
   hammerRenderer: {fileID: 2044494653121351492}
   smokeEffectPrefab: {fileID: 9078011455826510364, guid: 50d900ce3db22417c9814a39e2af8f3c, type: 3}
+  smokeDelay: 2

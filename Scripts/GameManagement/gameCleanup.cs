@@ -1,49 +1,41 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectDestroyer : MonoBehaviour
 {
-    public float distanceThreshold = 50f; // The distance from the average player location beyond which objects will be destroyed
-    public List<GameObject> objectsToCheck; // The list of objects to check
+    public float distanceThreshold = 10f; // The distance from the average player location beyond which objects will be destroyed
+    public List<string> tagsToCheck; // The list of tags to check
     public GameManager gameManager; // Reference to the GameManager script
+    public float checkInterval = 0.5f; // The interval in seconds between checks
 
-        void Start()
+    void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        StartCoroutine(CheckDistance());
     }
-        void Update()
+
+    IEnumerator CheckDistance()
     {
-        Vector3 averagePlayerLocation = gameManager.playerAverageLocation;
-
-        // Create a list to hold objects that need to be removed
-        List<GameObject> objectsToRemove = new List<GameObject>();
-
-        for (int i = 0; i < objectsToCheck.Count; i++)
+        while (true)
         {
-            GameObject go = objectsToCheck[i];
-            if (go == null)
-            {
-                objectsToRemove.Add(go);
-                continue;
-            }
+            Vector3 averagePlayerLocation = gameManager.playerAverageLocation;
 
-            float distance = Vector3.Distance(go.transform.position, averagePlayerLocation);
-            if (distance > distanceThreshold)
+            foreach (string tag in tagsToCheck)
             {
-                // Destroy all children of the game object
-                foreach (Transform child in go.transform)
+                GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
+
+                foreach (GameObject go in objectsWithTag)
                 {
-                    Destroy(child.gameObject);
+                    float distance = Vector3.Distance(go.transform.position, averagePlayerLocation);
+                    if (distance > distanceThreshold)
+                    {
+                        Destroy(go); // Destroy the game object
+                    }
                 }
-
-                objectsToRemove.Add(go);
             }
-        }
 
-        // Remove objects from objectsToCheck
-        foreach (GameObject go in objectsToRemove)
-        {
-            objectsToCheck.Remove(go);
+            yield return new WaitForSeconds(checkInterval); // Wait for the specified interval before the next check
         }
     }
 }

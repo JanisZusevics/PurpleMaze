@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1302380985946059102}
   - component: {fileID: 5781286173475206085}
   - component: {fileID: 8047435697123849163}
+  - component: {fileID: 6189082253005509737}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -123,7 +124,6 @@ MonoBehaviour:
   prefab: {fileID: 4715321639555124936, guid: 4ffbe30eedf3a4d5a9bf8a645a4c1aef, type: 3}
   parentObjectTag: spawnerFolder
   spawnHeight: 0.4
-  spawnInterval: 2
 --- !u!114 &8047435697123849163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,4 +139,16 @@ MonoBehaviour:
   prefab: {fileID: 6408567424547777860, guid: 406bbf2dae99546c4be658e873cb6a99, type: 3}
   parentObjectTag: playerFolder
   spawnHeight: 1
-  spawnInterval: 2
+--- !u!114 &6189082253005509737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8137741351294932604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b4cb40af9bdf4cbb98e509e88c0b2ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabIndex: 0

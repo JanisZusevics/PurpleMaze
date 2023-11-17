@@ -1008,10 +1008,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d80b0c2c9f34bc9883685b2bb54337, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceThreshold: 50
-  objectsToCheck:
-  - {fileID: 1404482783}
+  distanceThreshold: 30
+  tagsToCheck:
+  - Player
+  - Collectable
   gameManager: {fileID: 1758619862}
+  checkInterval: 0.5
 --- !u!114 &1758619862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1109,8 +1111,7 @@ MonoBehaviour:
   gameManager: {fileID: 1758619862}
   tilePrefabs:
   - {fileID: 8137741351294932604, guid: 51df058acc39e4422a34808ce511f3ea, type: 3}
-  gridSize: 10
-  spawnedParent: {fileID: 1990208867}
+  gridSize: 3
 --- !u!1 &2112890298
 GameObject:
   m_ObjectHideFlags: 0

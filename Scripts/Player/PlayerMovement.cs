@@ -21,6 +21,11 @@ public class PlayerMovement : MonoBehaviour
             Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
 
             rb.AddForce(movement * speed);
+            rb.isKinematic = false; // Enable physics
+        }
+        else
+        {
+            rb.isKinematic = true; // Disable physics
         }
     }
 

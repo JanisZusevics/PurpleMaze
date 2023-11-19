@@ -4,57 +4,60 @@ using UnityEngine;
 
 public class ObjectDestroyer : MonoBehaviour
 {
-    // The distance from the average player location beyond which objects will be destroyed
-    public float distanceThreshold = 10f; 
-
-    // The list of tags to check. Objects with these tags will be considered for destruction
-    public List<string> tagsToCheck; 
-
-    // Reference to the GameManager script. This is used to get the average player location
-    public GameManager gameManager; 
-
-    // The interval in seconds between checks. This determines how often we check the distance of objects
-    public float checkInterval = 0.5f; 
+    public float distanceThreshold = 10f; // Threshold for object destruction
+    public float shadowDistanceThreshold = 5f; // Half the distance threshold for shadow management
+    public List<string> tagsToCheck; // Tags to check for object management
+    public GameManager gameManager; // GameManager script reference
+    public float checkInterval = 0.5f; // Interval for checking object distance
+    public float shadowCheckInterval = 0.5f; // Interval for checking shadow distance
 
     void Start()
     {
-        // Find the GameManager in the scene and store a reference to it
         gameManager = FindObjectOfType<GameManager>();
-
-        // Start the CheckDistance coroutine. This will run in the background and periodically check the distance of objects
         StartCoroutine(CheckDistance());
+        StartCoroutine(ManageShadows());
     }
 
     IEnumerator CheckDistance()
     {
-        // This loop will run forever
         while (true)
         {
-            // Get the average player location from the GameManager
             Vector3 averagePlayerLocation = gameManager.playerAverageLocation;
-
-            // Loop over all the tags we need to check
             foreach (string tag in tagsToCheck)
             {
-                // Find all the game objects with the current tag
                 GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
-
-                // Loop over all the game objects with the current tag
                 foreach (GameObject go in objectsWithTag)
                 {
-                    // Calculate the distance from the game object to the average player location
                     float distance = Vector3.Distance(go.transform.position, averagePlayerLocation);
-
-                    // If the distance is greater than the threshold, destroy the game object
                     if (distance > distanceThreshold)
                     {
-                        Destroy(go); 
+                        Destroy(go);
                     }
                 }
             }
+            yield return new WaitForSeconds(checkInterval);
+        }
+    }
 
-            // Wait for the specified interval before the next check. This prevents the checks from running every frame, which could be performance intensive
-            yield return new WaitForSeconds(checkInterval); 
+    IEnumerator ManageShadows()
+    {
+        while (true)
+        {
+            Vector3 averagePlayerLocation = gameManager.playerAverageLocation;
+            foreach (string tag in tagsToCheck)
+            {
+                GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
+                foreach (GameObject go in objectsWithTag)
+                {
+                    float distance = Vector3.Distance(go.transform.position, averagePlayerLocation);
+                    Renderer renderer = go.GetComponent<Renderer>();
+                    if (renderer != null)
+                    {
+                        renderer.shadowCastingMode = (distance <= shadowDistanceThreshold) ? UnityEngine.Rendering.ShadowCastingMode.On : UnityEngine.Rendering.ShadowCastingMode.Off;
+                    }
+                }
+            }
+            yield return new WaitForSeconds(shadowCheckInterval);
         }
     }
 }

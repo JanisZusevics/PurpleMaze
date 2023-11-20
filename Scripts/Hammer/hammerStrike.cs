@@ -19,6 +19,7 @@ public class HammerStrike : MonoBehaviour
     public ParticleSystem smokeEffectPrefab;
     private ParticleSystem smokeEffect;
     public float smokeDelay = 2.0f; // Reference to the instantiated smoke effect
+    public float launchMultiplier = 10.0f; // Multiplier for the launch force
 
     private enum State
     {
@@ -94,7 +95,6 @@ public class HammerStrike : MonoBehaviour
 
     private void PerformStrike()
     {
-
         // Change the y scale of the hammer
         transform.localScale = new Vector3(transform.localScale.x, 2, transform.localScale.z);
 
@@ -108,17 +108,20 @@ public class HammerStrike : MonoBehaviour
         // Instantiate the smoke effect
         smokeEffect = Instantiate(smokeEffectPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
         smokeEffect.transform.localScale = new Vector3(hammerDiameter, hammerDiameter, hammerDiameter); // Scale the smoke effect to match the launch radius
+
         // Apply an upward force to player objects
         foreach (Collider hitCollider in hitColliders)
         {
-            if (hitCollider.gameObject.CompareTag("Player"))
+            MouseBehaviour mouseBehaviour = hitCollider.gameObject.GetComponent<MouseBehaviour>();
+            if (mouseBehaviour != null && mouseBehaviour.IsActive)
             {
                 Rigidbody playerRigidbody = hitCollider.gameObject.GetComponent<Rigidbody>();
                 if (playerRigidbody != null)
                 {
+                    Debug.Log("LAUNCH");
                     // Calculate the force based on the distance to the player
                     float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
-                    float force = Mathf.Log(launchRadius - distance + 1) * 10; // Adjust the multiplier as needed
+                    float force = Mathf.Log(launchRadius - distance + 1) * launchMultiplier; // Adjust the multiplier as needed
 
                     // Apply the force
                     playerRigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
@@ -169,7 +172,7 @@ public class HammerStrike : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("Hammer strike collided with " + other.gameObject.name);
-        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<PlayerMovement>().isActive)
+        if (other.gameObject.CompareTag("Mouse") && other.gameObject.GetComponent<MouseBehaviour>().IsActive)
         {
             Debug.Log("Hammer strike collided with active player, deleting player...");
             Destroy(other.gameObject);

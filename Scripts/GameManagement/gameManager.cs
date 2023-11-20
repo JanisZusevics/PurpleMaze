@@ -1,87 +1,81 @@
+using System.Collections;
 using UnityEngine;
 using TMPro;
-using System.Collections.Generic;
-using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
-    public List<GameObject> players;
-    public TMP_Text activePlayersText;
-    public TMP_Text gameOverText;
-    public TMP_Text collectablesText;
-    public Vector3 playerAverageLocation;
+    public GameObject playerMover; 
+    public GameObject[] spawners; 
 
-    private int activePlayers;
+    public TextMeshProUGUI statsCanvas; 
+    public TextMeshProUGUI endScreen; 
+
+    public Vector2 spawnRadiusRange = new Vector2(10f, 50f);
+    public float baseSpawnInterval = 1f;
+    public float minSpawnInterval = 0.1f;
+    public float maxSpawnInterval = 2f;
+    public float speedForMinInterval = 10f; 
+
+    private int activePlayers = 0;
     private int collectablesCollected = 0;
 
-    private void Start()
-    {
-        players = new List<GameObject>(GameObject.FindGameObjectsWithTag("Player"));
-        activePlayers = players.Count;
-        UpdateActivePlayersText();
-        gameOverText.gameObject.SetActive(false);
-        UpdateCollectablesText();
-    }
+    private Coroutine spawnRoutine;
+    public float biasStrength = 3f;
 
-    private void Update()
+    void Start()
     {
-        players = new List<GameObject>(GameObject.FindGameObjectsWithTag("Player"));
-        UpdateActivePlayersCount();
-        UpdateActivePlayersText();
-        UpdatePlayerAverageLocation();
-    }
-
-    public void PlayerDied()
-    {
-        activePlayers--;
-        UpdateActivePlayersText();
-
-        if (activePlayers <= 0)
+        playerMover.transform.position = Vector3.zero;
+        MouseBehaviour mouseBehaviour = Instantiate(spawners[0], Vector3.up, Quaternion.identity, transform)
+            .GetComponent<MouseBehaviour>();
+        if (mouseBehaviour != null)
         {
-            gameOverText.gameObject.SetActive(true);
+            mouseBehaviour.IsActive = true;
         }
+
+        spawnRoutine = StartCoroutine(SpawnRandomObjectInRange());
     }
 
-    public void CollectableCollected()
+    public void PlayerStateChanged(bool isActive)
+    {
+        if (isActive) activePlayers++;
+        else activePlayers--;
+
+        if (activePlayers == 0)
+        {
+            endScreen.enabled = true;
+            endScreen.text = $"Game Over\nCollectables: {collectablesCollected}";
+        }
+        else if (!endScreen.gameObject.activeInHierarchy && spawnRoutine == null)
+        {
+            spawnRoutine = StartCoroutine(SpawnRandomObjectInRange());
+        }
+
+        statsCanvas.text = $"Mice: {activePlayers}\nOrbs: {collectablesCollected}";
+    }
+
+    public void IncrementCollectablesCollected()
     {
         collectablesCollected++;
-        UpdateCollectablesText();
     }
 
-    private void UpdateActivePlayersText()
+    IEnumerator SpawnRandomObjectInRange()
     {
-        activePlayersText.text = "Active Players: " + activePlayers;
-    }
-
-    private void UpdateCollectablesText()
-    {
-        collectablesText.text = "Collectables: " + collectablesCollected;
-    }
-
-    private void UpdateActivePlayersCount()
-    {
-        players.RemoveAll(player => player == null);
-        activePlayers = players.Count(player => player.GetComponent<PlayerMovement>().isActive);
-    }
-
-    private void UpdatePlayerAverageLocation()
-    {
-        Vector3 sum = Vector3.zero;
-        int activePlayersCount = 0;
-
-        foreach (GameObject player in players)
+        while (true)
         {
-            PlayerMovement playerMovement = player.GetComponent<PlayerMovement>();
-            if (playerMovement != null && playerMovement.isActive)
-            {
-                activePlayersCount++;
-                sum += player.transform.position;
-            }
-        }
+            float playerSpeed = playerMover.GetComponent<PlayerMovement>().velocity.magnitude;
+            float adjustedSpawnInterval = Mathf.Lerp(maxSpawnInterval, minSpawnInterval, playerSpeed / speedForMinInterval);
 
-        if (activePlayersCount > 0)
-        {
-            playerAverageLocation = sum / activePlayersCount;
+            yield return new WaitForSeconds(adjustedSpawnInterval);
+
+            int spawnerIndex = Random.Range(1, spawners.Length);
+            float rand = Mathf.Sqrt(-2.0f * Mathf.Log(Random.Range(0f, 1f))) * Mathf.Sin(2.0f * Mathf.PI * Random.Range(0f, 1f));
+            float distance = spawnRadiusRange.y + rand * spawnRadiusRange.y / biasStrength;
+            distance = Mathf.Clamp(distance, 0, spawnRadiusRange.y);
+            float angle = Random.Range(0, 360);
+            Vector3 spawnPosition = playerMover.transform.position + new Vector3(distance * Mathf.Cos(angle), 0, distance * Mathf.Sin(angle));
+            spawnPosition.y = 0;
+
+            Instantiate(spawners[spawnerIndex], spawnPosition, Quaternion.identity, transform);
         }
     }
 }

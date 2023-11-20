@@ -123,8 +123,9 @@ MonoBehaviour:
   strikeDuration: 0.1
   shadowMaterial: {fileID: 2100000, guid: 29f1faf093b934c1bb780e966e5f342a, type: 2}
   hammerMaterial: {fileID: 2100000, guid: 2623c861625b547da9e25d18b70a7b38, type: 2}
-  hammerDiameter: 3
-  telegraphDuration: 1.35
+  hammerDiameter: 4
+  telegraphDuration: 2
   hammerRenderer: {fileID: 2044494653121351492}
   smokeEffectPrefab: {fileID: 9078011455826510364, guid: 50d900ce3db22417c9814a39e2af8f3c, type: 3}
-  smokeDelay: 2
+  smokeDelay: 5
+  launchMultiplier: 15

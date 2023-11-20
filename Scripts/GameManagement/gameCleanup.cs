@@ -7,13 +7,12 @@ public class ObjectDestroyer : MonoBehaviour
     public float distanceThreshold = 10f; // Threshold for object destruction
     public float shadowDistanceThreshold = 5f; // Half the distance threshold for shadow management
     public List<string> tagsToCheck; // Tags to check for object management
-    public GameManager gameManager; // GameManager script reference
+    public GameObject playerMover; // Empty object that player objects move towards
     public float checkInterval = 0.5f; // Interval for checking object distance
     public float shadowCheckInterval = 0.5f; // Interval for checking shadow distance
 
     void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
         StartCoroutine(CheckDistance());
         StartCoroutine(ManageShadows());
     }
@@ -22,13 +21,12 @@ public class ObjectDestroyer : MonoBehaviour
     {
         while (true)
         {
-            Vector3 averagePlayerLocation = gameManager.playerAverageLocation;
             foreach (string tag in tagsToCheck)
             {
                 GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
                 foreach (GameObject go in objectsWithTag)
                 {
-                    float distance = Vector3.Distance(go.transform.position, averagePlayerLocation);
+                    float distance = Vector3.Distance(go.transform.position, playerMover.transform.position);
                     if (distance > distanceThreshold)
                     {
                         Destroy(go);
@@ -43,13 +41,12 @@ public class ObjectDestroyer : MonoBehaviour
     {
         while (true)
         {
-            Vector3 averagePlayerLocation = gameManager.playerAverageLocation;
             foreach (string tag in tagsToCheck)
             {
                 GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
                 foreach (GameObject go in objectsWithTag)
                 {
-                    float distance = Vector3.Distance(go.transform.position, averagePlayerLocation);
+                    float distance = Vector3.Distance(go.transform.position, playerMover.transform.position);
                     Renderer renderer = go.GetComponent<Renderer>();
                     if (renderer != null)
                     {

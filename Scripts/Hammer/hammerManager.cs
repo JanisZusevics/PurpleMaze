@@ -4,7 +4,7 @@ using System.Collections;
 public class HammerManager : MonoBehaviour
 {
     public GameObject hammerPrefab;
-    public GameManager gameManager; // Add this line
+    public GameObject playerMover;  // Empty object that player objects move towards
     public float timeMin = 0.0f;
     public float timeMax = 2.0f;
 
@@ -22,27 +22,21 @@ public class HammerManager : MonoBehaviour
 
     private void SpawnHammerStrike()
     {
-        Vector3 averagePosition = GetPlayerAverageLocation(); // Update this line
+        Vector3 averagePosition = playerMover.transform.position;// Update this line
 
-        if (averagePosition != Vector3.zero)
+        averagePosition.y = 0; // Set y-coordinate to 0
+        GameObject hammer = Instantiate(hammerPrefab, averagePosition, Quaternion.identity);
+        HammerStrike hammerStrike = hammer.GetComponent<HammerStrike>();
+        if (hammerStrike != null)
         {
-            averagePosition.y = 0; // Set y-coordinate to 0
-            GameObject hammer = Instantiate(hammerPrefab, averagePosition, Quaternion.identity);
-            HammerStrike hammerStrike = hammer.GetComponent<HammerStrike>();
-            if (hammerStrike != null)
-            {
-                hammerStrike.OnStrikeEnd += HandleStrikeEnd;
-                hammerStrike.InitializeStrike(averagePosition);
-            }
-            else
-            {
-                Debug.Log("HammerStrike component not found on the instantiated hammer.");
-            }
+            hammerStrike.OnStrikeEnd += HandleStrikeEnd;
+            hammerStrike.InitializeStrike(averagePosition);
         }
         else
         {
-            Debug.Log("Average position is zero, not spawning a hammer.");
+            Debug.Log("HammerStrike component not found on the instantiated hammer.");
         }
+
     }
 
     private void HandleStrikeEnd()
@@ -54,10 +48,5 @@ public class HammerManager : MonoBehaviour
     {
         yield return new WaitForSeconds(Random.Range(timeMin, timeMax));
         SpawnHammerStrike();
-    }
-
-    private Vector3 GetPlayerAverageLocation()
-    {
-        return gameManager.playerAverageLocation;
     }
 }

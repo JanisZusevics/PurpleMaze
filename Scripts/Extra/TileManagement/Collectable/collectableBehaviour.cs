@@ -12,7 +12,7 @@ public class Collectable : MonoBehaviour
     public void Collect()
     {
         // Increment the collected count and print it to the log
-        gameManager.CollectableCollected();
+        gameManager.IncrementCollectablesCollected();
         
         // Destroy the collectable 
         Destroy(gameObject);
@@ -21,7 +21,7 @@ public class Collectable : MonoBehaviour
     // OnTriggerEnter is called when the Collider other enters the trigger
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") && other.gameObject.GetComponent<PlayerMovement>().isActive)
+        if (other.gameObject.CompareTag("Mouse") && other.gameObject.GetComponent<MouseBehaviour>().IsActive)
         {
             Collect();
         }

@@ -1,29 +1,42 @@
-using System.Collections;
-using UnityEngine;
-using TMPro;
+    using System.Collections;
+    using UnityEngine;
+    using TMPro;
 
-public class GameManager : MonoBehaviour
-{
-    public GameObject playerMover; 
-    public GameObject[] spawners; 
+    public class GameManager : MonoBehaviour
+    {
+        public GameObject playerMover; 
+        public GameObject[] spawners; 
 
-    public TextMeshProUGUI statsCanvas; 
-    public TextMeshProUGUI endScreen; 
+        public TextMeshProUGUI statsCanvas; 
+        public TextMeshProUGUI endScreen; 
 
-    public Vector2 spawnRadiusRange = new Vector2(10f, 50f);
-    public float baseSpawnInterval = 1f;
-    public float minSpawnInterval = 0.1f;
-    public float maxSpawnInterval = 2f;
-    public float speedForMinInterval = 10f; 
+        public Vector2 spawnRadiusRange = new Vector2(10f, 50f);
+        public float baseSpawnInterval = 1f;
+        public float minSpawnInterval = 0.1f;
+        public float maxSpawnInterval = 2f;
+        public float speedForMinInterval = 10f; 
 
-    private int activePlayers = 0;
-    private int collectablesCollected = 0;
+        private int activePlayers = 0;
+        private int collectablesCollected = 0;
 
-    private Coroutine spawnRoutine;
-    public float biasStrength = 3f;
+        private Coroutine spawnRoutine;
+        public float biasStrength = 3f;
+
+        private float[] spawnerHeights; // Array to store the heights of the spawners
 
     void Start()
     {
+        // Calculate and store the heights of the spawners
+        spawnerHeights = new float[spawners.Length];
+        for (int i = 0; i < spawners.Length; i++)
+        {
+            if (spawners[i].GetComponent<MeshRenderer>() != null)
+                spawnerHeights[i] = spawners[i].GetComponent<MeshRenderer>().bounds.size.y;
+            else if (spawners[i].GetComponent<Collider>() != null)
+                spawnerHeights[i] = spawners[i].GetComponent<Collider>().bounds.size.y;
+            else
+                spawnerHeights[i] = 0;
+        }
         playerMover.transform.position = Vector3.zero;
         MouseBehaviour mouseBehaviour = Instantiate(spawners[0], Vector3.up, Quaternion.identity, transform)
             .GetComponent<MouseBehaviour>();
@@ -73,7 +86,9 @@ public class GameManager : MonoBehaviour
             distance = Mathf.Clamp(distance, 0, spawnRadiusRange.y);
             float angle = Random.Range(0, 360);
             Vector3 spawnPosition = playerMover.transform.position + new Vector3(distance * Mathf.Cos(angle), 0, distance * Mathf.Sin(angle));
-            spawnPosition.y = 0;
+            spawnPosition.y += spawnerHeights[spawnerIndex] / 2;
+
+            Instantiate(spawners[spawnerIndex], spawnPosition, Quaternion.identity, transform);
 
             Instantiate(spawners[spawnerIndex], spawnPosition, Quaternion.identity, transform);
         }

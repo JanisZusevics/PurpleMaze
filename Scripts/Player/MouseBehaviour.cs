@@ -3,10 +3,26 @@ using UnityEngine;
 public class MouseBehaviour : MonoBehaviour
 {
     public GameObject playerMover; // The target GameObject
-    private bool _isActive = false;  // Determines if the mouse should move towards the target
     public float speedFactor = 1f; // Speed factor for the mouse movement
     public float range = 1f;       // Range within which the mouse does not move towards the playerMover
     private GameManager gameManager; // GameManager instance
+
+    private bool _isActive = false;
+    private bool _isDead = false;   // Tracks if the mouse is dead
+    private bool _isOnGround = true; // Tracks if the mouse is on the ground
+    private int groundContactCount = 0; // Tracks the number of ground contacts
+
+
+    private enum MouseState
+    {
+        Asleep,
+        Idle,
+        Moving,
+        Ragdoll,
+        Death
+    }
+
+    private MouseState currentState;
 
     public bool IsActive
     {
@@ -17,6 +33,20 @@ public class MouseBehaviour : MonoBehaviour
             {
                 _isActive = value;
                 gameManager.PlayerStateChanged(_isActive);
+                UpdateState();
+            }
+        }
+    }
+
+    public bool IsDead
+    {
+        get { return _isDead; }
+        set
+        {
+            if (_isDead != value)
+            {
+                _isDead = value;
+                UpdateState();
             }
         }
     }
@@ -32,39 +62,113 @@ public class MouseBehaviour : MonoBehaviour
         {
             playerMover = gameManager.playerMover;
         }
+        UpdateState(); // Initialize the state
     }
 
     void Update()
     {
-        if (IsActive && playerMover != null)
+        switch (currentState)
         {
-            float distance = Vector3.Distance(transform.position, playerMover.transform.position);
-            if (distance > range)
-            {
+            case MouseState.Moving:
                 MoveTowardsPlayerMover();
-            }
+                // debug dra a blue line towards the playerMover
+                Debug.DrawLine(transform.position, playerMover.transform.position, Color.blue);
+                break;
+            case MouseState.Ragdoll:
+                // Ragdoll logic here (if any)
+                //check if the mouse is on the ground
+                if (_isOnGround)
+                {
+                    //if the mouse is on the ground, set the state to moving
+                    currentState = MouseState.Moving;
+                }
+                // while in ragdoll debug draw red line towards the sky
+                Debug.DrawLine(transform.position, transform.position + Vector3.up * 10, Color.red);
+                break;
+            case MouseState.Idle:
+                // Idle logic here
+                //check if the mouse is on the ground and the playerMover is outside range
+                if (_isOnGround && playerMover != null && Vector3.Distance(transform.position, playerMover.transform.position) > range)
+                {
+                    //if the mouse is on the ground and the playerMover is outside range, set the state to moving
+                    currentState = MouseState.Moving;
+                }
+                break;
+            case MouseState.Death:
+                // Death logic here
+                break;
         }
     }
 
     private void MoveTowardsPlayerMover()
     {
-        // Rotate to face the playerMover object
-        Vector3 direction = playerMover.transform.position - transform.position;
-        transform.rotation = Quaternion.LookRotation(direction);
+        if (playerMover != null)
+        {
+            float distance = Vector3.Distance(transform.position, playerMover.transform.position);
+            if (distance > range)
+            {
+                // Rotate to face the playerMover object
+                Vector3 direction = playerMover.transform.position - transform.position;
+                transform.rotation = Quaternion.LookRotation(direction);
 
-        // Move forward (assuming forward is the facing direction of the mouse)
-        transform.Translate(Vector3.forward * speedFactor * Time.deltaTime);
+                // Move forward
+                transform.Translate(Vector3.forward * speedFactor * Time.deltaTime);
+            }
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Mouse"))
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            groundContactCount++;
+            UpdateState();
+        }
+        else if (collision.gameObject.CompareTag("Mouse"))
         {
             MouseBehaviour otherMouse = collision.gameObject.GetComponent<MouseBehaviour>();
-            if (otherMouse != null && otherMouse.IsActive == true && this.IsActive == false)
+            if (otherMouse != null && otherMouse.IsActive && !this.IsActive)
             {
                 this.IsActive = true;
             }
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Ground") && groundContactCount > 0)
+        {
+            groundContactCount--;
+            UpdateState();
+        }
+    }  
+
+    private void UpdateState()
+    {
+        bool isOnGround = groundContactCount > 0;
+
+        if (_isDead)
+        {
+            currentState = MouseState.Death;
+        }
+        else if (!_isActive)
+        {
+            currentState = MouseState.Asleep;
+        }
+        else if (!isOnGround)
+        {
+            currentState = MouseState.Ragdoll;
+            Debug.Log("Mouse is in ragdoll state");
+        }
+        else if (_isActive && playerMover != null && Vector3.Distance(transform.position, playerMover.transform.position) > range)
+        {
+            currentState = MouseState.Moving;
+            Debug.Log("Mouse is in moving state");
+        }
+        else
+        {
+            currentState = MouseState.Idle;
+            Debug.Log("Mouse is in idle state");
         }
     }
 }

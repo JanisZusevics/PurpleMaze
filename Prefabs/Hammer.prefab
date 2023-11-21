@@ -128,4 +128,4 @@ MonoBehaviour:
   hammerRenderer: {fileID: 2044494653121351492}
   smokeEffectPrefab: {fileID: 9078011455826510364, guid: 50d900ce3db22417c9814a39e2af8f3c, type: 3}
   smokeDelay: 5
-  launchMultiplier: 15
+  launchMultiplier: 25

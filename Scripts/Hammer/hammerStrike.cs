@@ -118,13 +118,15 @@ public class HammerStrike : MonoBehaviour
                 Rigidbody playerRigidbody = hitCollider.gameObject.GetComponent<Rigidbody>();
                 if (playerRigidbody != null)
                 {
-                    Debug.Log("LAUNCH");
                     // Calculate the force based on the distance to the player
                     float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
-                    float force = Mathf.Log(launchRadius - distance + 1) * launchMultiplier; // Adjust the multiplier as needed
+                    float force = Mathf.Log(launchRadius / distance) * launchMultiplier; // Adjust the multiplier as needed
 
-                    // Apply the force
-                    playerRigidbody.AddForce(Vector3.up * force, ForceMode.Impulse);
+                    // Calculate the direction from the hammer to the mouse
+                    Vector3 direction = (hitCollider.transform.position - transform.position).normalized + Vector3.up;
+
+                    // Apply the force in the calculated direction
+                    playerRigidbody.AddForce(direction * force, ForceMode.Impulse);
                 }
             }
         }

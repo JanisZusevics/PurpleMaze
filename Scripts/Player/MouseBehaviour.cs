@@ -80,7 +80,7 @@ public class MouseBehaviour : MonoBehaviour
                 if (_isOnGround)
                 {
                     //if the mouse is on the ground, set the state to moving
-                    currentState = MouseState.Moving;
+                    //currentState = MouseState.Moving;
                 }
                 // while in ragdoll debug draw red line towards the sky
                 Debug.DrawLine(transform.position, transform.position + Vector3.up * 10, Color.red);

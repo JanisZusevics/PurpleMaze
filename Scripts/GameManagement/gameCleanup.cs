@@ -29,7 +29,23 @@ public class ObjectDestroyer : MonoBehaviour
                     float distance = Vector3.Distance(go.transform.position, playerMover.transform.position);
                     if (distance > distanceThreshold)
                     {
-                        Destroy(go);
+                        // if tag is Mouse lower activePlayers
+                        // only delete the mouse tags that are isActive = false
+                        if (tag == "Mouse")
+                        {
+                            MouseBehaviour mouseBehaviour = go.GetComponent<MouseBehaviour>();
+                            if (mouseBehaviour != null)
+                            {
+                                if (!mouseBehaviour.IsActive)
+                                {
+                                    Destroy(go);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Destroy(go);
+                        }
                     }
                 }
             }

@@ -95,7 +95,9 @@ public class MouseBehaviour : MonoBehaviour
                 }
                 break;
             case MouseState.Death:
-                // Death logic here
+                IsActive = false;
+                ///gameManager.PlayerStateChanged(_isActive);
+                Destroy(gameObject);
                 break;
         }
     }
@@ -111,8 +113,8 @@ public class MouseBehaviour : MonoBehaviour
                 Vector3 direction = playerMover.transform.position - transform.position;
                 transform.rotation = Quaternion.LookRotation(direction);
 
-                // Move forward
-                transform.Translate(Vector3.forward * speedFactor * Time.deltaTime);
+                // Move forward, with speed directly proportional to the distance from the playerMover
+                transform.Translate(Vector3.forward * speedFactor * distance * Time.deltaTime);
             }
         }
     }
@@ -150,6 +152,10 @@ public class MouseBehaviour : MonoBehaviour
         if (_isDead)
         {
             currentState = MouseState.Death;
+            // log death
+            Debug.Log("Mouse Died");
+            // Destroy the mouse object
+
         }
         else if (!_isActive)
         {
@@ -158,17 +164,14 @@ public class MouseBehaviour : MonoBehaviour
         else if (!isOnGround)
         {
             currentState = MouseState.Ragdoll;
-            Debug.Log("Mouse is in ragdoll state");
         }
         else if (_isActive && playerMover != null && Vector3.Distance(transform.position, playerMover.transform.position) > range)
         {
             currentState = MouseState.Moving;
-            Debug.Log("Mouse is in moving state");
         }
         else
         {
             currentState = MouseState.Idle;
-            Debug.Log("Mouse is in idle state");
         }
     }
 }

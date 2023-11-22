@@ -120,8 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerMover: {fileID: 0}
-  isActive: 0
-  speedFactor: 6
+  speedFactor: 2
   range: 2
 --- !u!54 &3133080926721040202
 Rigidbody:
@@ -131,8 +130,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2039285388128732958}
   serializedVersion: 4
-  m_Mass: 2
-  m_Drag: 3
+  m_Mass: 5
+  m_Drag: 0.5
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}

@@ -89,7 +89,7 @@ public class HammerStrike : MonoBehaviour
         if (timer <= 0)
         {
             currentState = State.Striking;
-            //strikeCollider.enabled = true;
+            strikeCollider.enabled = true;
         }
     }
 
@@ -99,7 +99,7 @@ public class HammerStrike : MonoBehaviour
         transform.localScale = new Vector3(transform.localScale.x, 2, transform.localScale.z);
 
         // Enable the strike collider to delete players
-        //strikeCollider.enabled = true;
+        strikeCollider.enabled = true;
 
         // Create a second, larger collider
         float launchRadius = hammerDiameter * 4;
@@ -154,10 +154,10 @@ public class HammerStrike : MonoBehaviour
     IEnumerator EnableColliderDuringStrike()
     {
         // Enable the collider, wait for the strike duration, then disable the collider
-        //strikeCollider.enabled = true;
+        strikeCollider.enabled = true;
         yield return new WaitForSeconds(strikeDuration);
         strikeCollider.enabled = false;
-            }
+    }
 
     IEnumerator WaitForStrikeDuration()
     {
@@ -177,7 +177,8 @@ public class HammerStrike : MonoBehaviour
         if (other.gameObject.CompareTag("Mouse") && other.gameObject.GetComponent<MouseBehaviour>().IsActive)
         {
             Debug.Log("Hammer strike collided with active player, deleting player...");
-            Destroy(other.gameObject);
+            // set mouse isDead to true
+            other.gameObject.GetComponent<MouseBehaviour>().IsDead = true;
         }
     }
 }

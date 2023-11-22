@@ -8,6 +8,9 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody rb;
     private Vector3 lastPosition;
 
+    // Reference to the Joystick script
+    public Joystick joystick; // Assuming the joystick script is named 'Joystick'
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -16,8 +19,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
+        // Use joystick.Horizontal and joystick.Vertical for movement
+        float moveHorizontal = joystick.Horizontal;
+        float moveVertical = joystick.Vertical;
 
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
         rb.MovePosition(rb.position + movement * speed * Time.deltaTime);

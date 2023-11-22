@@ -26,24 +26,28 @@
 
     void Start()
     {
-        // Calculate and store the heights of the spawners
-        spawnerHeights = new float[spawners.Length];
-        for (int i = 0; i < spawners.Length; i++)
-        {
-            if (spawners[i].GetComponent<MeshRenderer>() != null)
-                spawnerHeights[i] = spawners[i].GetComponent<MeshRenderer>().bounds.size.y;
-            else if (spawners[i].GetComponent<Collider>() != null)
-                spawnerHeights[i] = spawners[i].GetComponent<Collider>().bounds.size.y;
-            else
-                spawnerHeights[i] = 0;
-        }
-        playerMover.transform.position = Vector3.zero;
-        MouseBehaviour mouseBehaviour = Instantiate(spawners[0], Vector3.up, Quaternion.identity, transform)
-            .GetComponent<MouseBehaviour>();
-        if (mouseBehaviour != null)
-        {
-            mouseBehaviour.IsActive = true;
-        }
+            // Calculate and store the heights of the spawners
+            spawnerHeights = new float[spawners.Length];
+            for (int i = 0; i < spawners.Length; i++)
+            {
+                if (spawners[i].GetComponent<MeshRenderer>() != null)
+                    spawnerHeights[i] = spawners[i].GetComponent<MeshRenderer>().bounds.size.y;
+                else if (spawners[i].GetComponent<Collider>() != null)
+                    spawnerHeights[i] = spawners[i].GetComponent<Collider>().bounds.size.y;
+                else
+                    spawnerHeights[i] = 0;
+            }
+            playerMover.transform.position = Vector3.zero;
+            //spawn 20 mouses
+            for (int i = 0; i < 20; i++)
+            {
+                MouseBehaviour mouseBehaviour = Instantiate(spawners[0], Vector3.up, Quaternion.identity, transform)
+                    .GetComponent<MouseBehaviour>();
+                if (mouseBehaviour != null)
+                {
+                    mouseBehaviour.IsActive = true;
+                }
+            }
 
         spawnRoutine = StartCoroutine(SpawnRandomObjectInRange());
     }
@@ -53,9 +57,14 @@
         if (isActive) activePlayers++;
         else activePlayers--;
 
-        if (activePlayers == 0)
+        if (activePlayers < 1)
         {
-            endScreen.enabled = true;
+            // log game over
+            Debug.Log("Game Over");
+            // set end screen as active
+            endScreen.gameObject.SetActive(true);
+            // log end screen enabled  
+            Debug.Log("End Screen Enabled");
             endScreen.text = $"Game Over\nCollectables: {collectablesCollected}";
         }
         else if (!endScreen.gameObject.activeInHierarchy && spawnRoutine == null)

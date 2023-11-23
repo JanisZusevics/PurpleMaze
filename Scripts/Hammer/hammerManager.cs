@@ -7,22 +7,29 @@ public class HammerManager : MonoBehaviour
     public GameObject playerMover;  // Empty object that player objects move towards
     public float timeMin = 0.0f;
     public float timeMax = 2.0f;
+    public bool isHammerEnabled = true; // Add this line
 
     private void Start()
     {
         Debug.Log("Starting HammerManager...");
-        StartCoroutine(StartAfterDelay());
+        if (isHammerEnabled)
+        {
+            StartCoroutine(StartAfterDelay());
+        }
     }
 
     private IEnumerator StartAfterDelay()
     {
         yield return new WaitForSeconds(2); // Wait for 2 seconds
-        SpawnHammerStrike();
+        if (isHammerEnabled)
+        {
+            SpawnHammerStrike();
+        }
     }
 
     private void SpawnHammerStrike()
     {
-        Vector3 averagePosition = playerMover.transform.position;// Update this line
+        Vector3 averagePosition = playerMover.transform.position;
 
         averagePosition.y = 0; // Set y-coordinate to 0
         GameObject hammer = Instantiate(hammerPrefab, averagePosition, Quaternion.identity);
@@ -36,17 +43,22 @@ public class HammerManager : MonoBehaviour
         {
             Debug.Log("HammerStrike component not found on the instantiated hammer.");
         }
-
     }
 
     private void HandleStrikeEnd()
     {
-        StartCoroutine(WaitAndSpawn());
+        if (isHammerEnabled)
+        {
+            StartCoroutine(WaitAndSpawn());
+        }
     }
 
     private IEnumerator WaitAndSpawn()
     {
         yield return new WaitForSeconds(Random.Range(timeMin, timeMax));
-        SpawnHammerStrike();
+        if (isHammerEnabled)
+        {
+            SpawnHammerStrike();
+        }
     }
 }

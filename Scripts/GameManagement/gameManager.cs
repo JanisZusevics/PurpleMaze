@@ -24,6 +24,8 @@
 
         private float[] spawnerHeights; // Array to store the heights of the spawners
 
+        
+
     void Start()
     {
             // Calculate and store the heights of the spawners
@@ -39,7 +41,7 @@
             }
             playerMover.transform.position = Vector3.zero;
             //spawn 20 mouses
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 1; i++)
             {
                 MouseBehaviour mouseBehaviour = Instantiate(spawners[0], Vector3.up, Quaternion.identity, transform)
                     .GetComponent<MouseBehaviour>();

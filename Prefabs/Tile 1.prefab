@@ -12,9 +12,8 @@ GameObject:
   - component: {fileID: 7642787463092444028}
   - component: {fileID: 638579190688965778}
   - component: {fileID: 1302380985946059102}
-  - component: {fileID: 5781286173475206085}
-  - component: {fileID: 8047435697123849163}
   - component: {fileID: 6189082253005509737}
+  - component: {fileID: -7267185940637934919}
   m_Layer: 0
   m_Name: Tile 1
   m_TagString: Untagged
@@ -109,36 +108,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &5781286173475206085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8137741351294932604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df4e738603f7547be9b91d9480e7bedd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 4715321639555124936, guid: 4ffbe30eedf3a4d5a9bf8a645a4c1aef, type: 3}
-  parentObjectTag: spawnerFolder
-  spawnHeight: 0.4
---- !u!114 &8047435697123849163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8137741351294932604}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df4e738603f7547be9b91d9480e7bedd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 6408567424547777860, guid: 406bbf2dae99546c4be658e873cb6a99, type: 3}
-  parentObjectTag: playerFolder
-  spawnHeight: 1
 --- !u!114 &6189082253005509737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,3 +121,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabIndex: 0
+--- !u!114 &-7267185940637934919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8137741351294932604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30aca2bf4273746ae96a677b0eb47fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shellMesh: {fileID: 0}
+  shellShader: {fileID: 0}
+  updateStatics: 1
+  shellCount: 16
+  shellLength: 0.3
+  distanceAttenuation: 1
+  density: 100
+  noiseMin: 0
+  noiseMax: 1
+  thickness: 0.93
+  curvature: 1
+  displacementStrength: 0.1
+  shellColor: {r: 0, g: 0, b: 0, a: 0}
+  occlusionAttenuation: 1
+  occlusionBias: 0

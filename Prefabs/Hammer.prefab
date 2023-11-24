@@ -125,6 +125,8 @@ MonoBehaviour:
   hammerMaterial: {fileID: 2100000, guid: 2623c861625b547da9e25d18b70a7b38, type: 2}
   hammerDiameter: 4
   telegraphDuration: 2
+  hammerHeight: 5
+  telegraphHeight: 0.93
   hammerRenderer: {fileID: 2044494653121351492}
   smokeEffectPrefab: {fileID: 9078011455826510364, guid: 50d900ce3db22417c9814a39e2af8f3c, type: 3}
   smokeDelay: 5

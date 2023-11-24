@@ -95,9 +95,9 @@ public class MouseBehaviour : MonoBehaviour
                 }
                 break;
             case MouseState.Death:
-                //IsActive = false;
-                ///gameManager.PlayerStateChanged(_isActive);
-                //Destroy(gameObject);
+                IsActive = false;
+                //gameManager.PlayerStateChanged(_isActive);
+                Destroy(gameObject);
                 break;
         }
     }

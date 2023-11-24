@@ -9,6 +9,9 @@ public class HammerStrike : MonoBehaviour
     public float hammerDiameter;
     public float telegraphDuration;
 
+    public float hammerHeight = 5.0f; // Height of the hammer when striking
+    public float telegraphHeight = 3.0f; // Height of the hammer during the telegraph
+
     private Collider strikeCollider;
     public Renderer hammerRenderer;
     private float timer;
@@ -84,7 +87,7 @@ public class HammerStrike : MonoBehaviour
         // Decrease the timer and scale the hammer based on the timer
         timer -= Time.deltaTime;
         float scale = Mathf.Clamp01((telegraphDuration - timer) / telegraphDuration) * hammerDiameter;
-        transform.localScale = new Vector3(scale, 0.01f, scale); // Only scale x and z
+        transform.localScale = new Vector3(scale, telegraphHeight, scale); // Only scale x and z
 
         if (timer <= 0)
         {
@@ -96,7 +99,7 @@ public class HammerStrike : MonoBehaviour
     private void PerformStrike()
     {
         // Change the y scale of the hammer
-        transform.localScale = new Vector3(transform.localScale.x, 2, transform.localScale.z);
+        transform.localScale = new Vector3(transform.localScale.x, hammerHeight, transform.localScale.z);
 
         // Enable the strike collider to delete players
         strikeCollider.enabled = true;

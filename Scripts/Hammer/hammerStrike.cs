@@ -120,7 +120,9 @@ public class HammerStrike : MonoBehaviour
 
         // Instantiate the smoke effect
         smokeEffect = Instantiate(smokeEffectPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
-        smokeEffect.transform.localScale = new Vector3(launchRadius/2, launchRadius/2, launchRadius/2); // Scale the smoke effect to match the launch radius
+        smokeEffect.transform.localScale = new Vector3(launchRadius/4, launchRadius/4, launchRadius/4);
+
+         // Scale the smoke effect to match the launch radius
 
         // Apply an upward force to player objects
         foreach (Collider hitCollider in hitColliders)

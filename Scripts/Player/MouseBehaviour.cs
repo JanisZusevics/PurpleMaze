@@ -106,15 +106,19 @@ public class MouseBehaviour : MonoBehaviour
     {
         if (playerMover != null)
         {
+            // Calculate the distance to the playerMover object
             float distance = Vector3.Distance(transform.position, playerMover.transform.position);
             if (distance > range)
             {
-                // Rotate to face the playerMover object
+                // Rotate to face the playerMover object 
+                // with 90 degrees y offset
                 Vector3 direction = playerMover.transform.position - transform.position;
                 transform.rotation = Quaternion.LookRotation(direction);
 
+                float distance_multiplier = Mathf.Clamp(distance / 4.5f, 1, 100f);
+                Debug.Log($"Distance Multiplier: {distance_multiplier}");
                 // Move forward, with speed directly proportional to the distance from the playerMover
-                transform.Translate(Vector3.forward * speedFactor * distance * Time.deltaTime);
+                transform.Translate(Vector3.forward * speedFactor * distance_multiplier * Time.deltaTime);
             }
         }
     }

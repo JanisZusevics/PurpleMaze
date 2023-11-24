@@ -116,8 +116,8 @@ MonoBehaviour:
   shellShader: {fileID: 4800000, guid: 96d2b4709c14c44f091004522fc72d1d, type: 3}
   updateStatics: 1
   shellCount: 32
-  shellLength: 0.319
-  distanceAttenuation: 3
+  shellLength: 0.5
+  distanceAttenuation: 0.01
   density: 250
   noiseMin: 0
   noiseMax: 1

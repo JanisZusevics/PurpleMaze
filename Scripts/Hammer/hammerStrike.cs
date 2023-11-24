@@ -13,7 +13,7 @@ public class HammerStrike : MonoBehaviour
     public float telegraphHeight = 3.0f; // Height of the hammer during the telegraph
 
     private Collider strikeCollider;
-    public Renderer hammerRenderer;
+    private Renderer hammerRenderer;
     private float timer;
     private Vector3 strikePosition;
     public delegate void StrikeEndHandler();
@@ -23,6 +23,9 @@ public class HammerStrike : MonoBehaviour
     private ParticleSystem smokeEffect;
     public float smokeDelay = 2.0f; // Reference to the instantiated smoke effect
     public float launchMultiplier = 10.0f; // Multiplier for the launch force
+
+    // reference to camera
+    private Camera mainCamera;
 
     private enum State
     {
@@ -38,12 +41,13 @@ public class HammerStrike : MonoBehaviour
     void Start()
     {
         strikeCollider = GetComponent<Collider>();
-        if (hammerRenderer == null)
-        {
-            Debug.LogWarning("HammerRenderer is not assigned in the editor.");
-        }
         strikeCollider.enabled = false;
         currentState = State.Initializing;
+        // Set hammer renderer to the child called Cube
+        hammerRenderer = transform.GetChild(0).GetComponent<Renderer>();
+        // Set the camera
+        mainCamera = Camera.main;
+        
     }
 
     void Update()
@@ -70,6 +74,8 @@ public class HammerStrike : MonoBehaviour
 
     public void InitializeStrike(Vector3 strikePosition)
     {
+        // set renderer to child called Cube
+        hammerRenderer = transform.GetChild(0).GetComponent<Renderer>();
         // Position the hammer at the strike position and start the telegraph
         this.strikePosition = strikePosition;
         hammerRenderer.material = shadowMaterial; // Change material to shadow material first
@@ -105,12 +111,16 @@ public class HammerStrike : MonoBehaviour
         strikeCollider.enabled = true;
 
         // Create a second, larger collider
-        float launchRadius = hammerDiameter * 4;
+        float launchRadius = hammerDiameter * 10;
+
+
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, launchRadius);
+        //debug draw hit colliders
+
 
         // Instantiate the smoke effect
         smokeEffect = Instantiate(smokeEffectPrefab, transform.position, Quaternion.Euler(-90, 0, 0));
-        smokeEffect.transform.localScale = new Vector3(hammerDiameter, hammerDiameter, hammerDiameter); // Scale the smoke effect to match the launch radius
+        smokeEffect.transform.localScale = new Vector3(launchRadius/2, launchRadius/2, launchRadius/2); // Scale the smoke effect to match the launch radius
 
         // Apply an upward force to player objects
         foreach (Collider hitCollider in hitColliders)
@@ -130,10 +140,29 @@ public class HammerStrike : MonoBehaviour
 
                     // Apply the force in the calculated direction
                     playerRigidbody.AddForce(direction * force, ForceMode.Impulse);
+                    // shake the main camera
+                    if (mainCamera != null)
+                    {
+                        CameraShake cameraShake = mainCamera.GetComponent<CameraShake>();
+                        if (cameraShake != null)
+                        {
+                            cameraShake.Shake();
+                        }
+                        else
+                        {
+                            Debug.Log("CameraShake component not found on main camera");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Main Camera not found");
+                    }
                 }
             }
         }
         hammerRenderer.material = hammerMaterial; // Change material back to hammer material
+        // log material 
+        Debug.Log("Material Changed");
         StartCoroutine(EnableColliderDuringStrike());
         currentState = State.Retreating;
     }
@@ -171,7 +200,8 @@ public class HammerStrike : MonoBehaviour
     IEnumerator DestroySmokeEffectAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        Destroy(smokeEffect.gameObject);
+        // destroy all smoke effects in the scene 
+        Destroy(smokeEffect);
     }
 
     void OnTriggerEnter(Collider other)

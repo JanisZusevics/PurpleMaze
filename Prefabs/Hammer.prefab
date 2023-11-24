@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2044494653121351492}
   - component: {fileID: 2792137461655790115}
   - component: {fileID: 7462047289510889565}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 4221105614210541290}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.037968, y: 6.98, z: 0.038078}
-  m_LocalScale: {x: 3.5014, y: 0.1, z: 3.5014}
+  m_LocalPosition: {x: -0.037968, y: 9.89, z: 0.038078}
+  m_LocalScale: {x: 3.5014, y: 5, z: 3.5014}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -105,9 +105,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5000001
-  m_Height: 100
+  m_Height: 45.945194
   m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  m_Center: {x: 0.000000068092355, y: 8.842661, z: -0.00000010213853}
 --- !u!114 &7462047289510889565
 MonoBehaviour:
   m_ObjectHideFlags: 0

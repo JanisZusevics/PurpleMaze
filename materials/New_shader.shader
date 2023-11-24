@@ -1,9 +1,6 @@
 Shader "Custom/Water" {
     Properties {
         // ... existing properties ...
-        _WindStrength ("Wind Strength", Float) = 0.2
-        _WindFrequency ("Wind Frequency", Float) = 0.3
-        _WindDirection ("Wind Direction", Vector) = (1,0,0)
         _TileWidth ("Tile Width", Float) = 1100.0
         _TileLength ("Tile Length", Float) = 1100.0
     }
@@ -51,10 +48,6 @@ Shader "Custom/Water" {
             float3 _ShellDirection;
             float3 _GlobalInteractionDirection;
 
-            float _WindStrength;
-            float _WindFrequency;
-            float3 _WindDirection;
-
             float _TileWidth;
             float _TileLength;
 
@@ -71,20 +64,6 @@ Shader "Custom/Water" {
                 i.normal = normalize(UnityObjectToWorldNormal(v.normal));
                 float k = pow(shellHeight, _Curvature);
                 v.vertex.xyz += _GlobalInteractionDirection * k * _DisplacementStrength;
-
-                // Wind effect with gradual tapering and edge blending
-                float windEffect = sin(_Time.y * _WindFrequency + v.vertex.x + v.vertex.z) * _WindStrength;
-                float taperStart = 0.3; // Start of tapering range
-                float taperEnd = 0.7; // End of tapering range
-                float taperFactor = smoothstep(taperStart, taperEnd, (float)_ShellIndex / (float)_ShellCount); 
-                float distX = min(v.vertex.x, _TileWidth - v.vertex.x);
-                float distZ = min(v.vertex.z, _TileLength - v.vertex.z);
-                float edgeDist = min(distX, distZ);
-                float edgeStart = 0.1; // Start of edge blending range
-                float edgeEnd = 0.3; // End of edge blending range
-                float edgeFactor = smoothstep(edgeStart, edgeEnd, edgeDist);
-                windEffect *= taperFactor * edgeFactor;
-                v.vertex.xyz += windEffect * _WindDirection;
 
                 i.worldPos = mul(unity_ObjectToWorld, v.vertex);
                 i.pos = UnityObjectToClipPos(v.vertex);

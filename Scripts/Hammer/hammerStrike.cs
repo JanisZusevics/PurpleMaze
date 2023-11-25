@@ -209,6 +209,7 @@ public class HammerStrike : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         Debug.Log("Hammer strike collided with " + other.gameObject.name);
+        // If the hammer strike collides with a player, delete the player
         if (other.gameObject.CompareTag("Mouse") && other.gameObject.GetComponent<MouseBehaviour>().IsActive)
         {
             Debug.Log("Hammer strike collided with active player, deleting player...");

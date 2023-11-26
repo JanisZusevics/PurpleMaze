@@ -99,7 +99,7 @@ MonoBehaviour:
   telegraphHeight: 0.93
   smokeEffectPrefab: {fileID: 9078011455826510364, guid: 50d900ce3db22417c9814a39e2af8f3c, type: 3}
   smokeDelay: 5
-  launchMultiplier: 100
+  launchMultiplier: 200
 --- !u!65 &1365898259599207810
 BoxCollider:
   m_ObjectHideFlags: 0

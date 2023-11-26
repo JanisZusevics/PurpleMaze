@@ -124,7 +124,7 @@ MonoBehaviour:
   thickness: 10
   curvature: 1.9
   displacementStrength: 1
-  shellColor: {r: 0.494939, g: 0, b: 0.764151, a: 0}
+  shellColor: {r: 0.088287644, g: 0.6037736, b: 0.15050144, a: 0}
   occlusionAttenuation: 2.28
   occlusionBias: 0.4
   windStrength: 1

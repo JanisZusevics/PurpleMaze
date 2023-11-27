@@ -40,6 +40,7 @@ public class HammerStrike : MonoBehaviour
 
     void Start()
     {
+        // Get the collider and disable it
         strikeCollider = GetComponent<Collider>();
         strikeCollider.enabled = false;
         currentState = State.Initializing;

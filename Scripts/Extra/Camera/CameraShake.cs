@@ -23,7 +23,7 @@ public class CameraShake : MonoBehaviour
             //set game speed to half
             Time.timeScale = 0.5f;
             
-
+            // generate random offset
             float x = Random.Range(-1f, 1f) * shakeMagnitude;
             float y = Random.Range(-1f, 1f) * shakeMagnitude;
             float z = Random.Range(-1f, 1f) * shakeMagnitude;

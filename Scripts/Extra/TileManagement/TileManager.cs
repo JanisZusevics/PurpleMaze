@@ -14,8 +14,8 @@ public class EndlessTileManager : MonoBehaviour
     void Start()
     {
         // Calculate the actual size of the tile's mesh
-        Mesh mesh = tilePrefabs[0].GetComponent<MeshFilter>().sharedMesh;
-        tileSize = mesh.bounds.size.x * tilePrefabs[0].transform.localScale.x;
+        Renderer renderer = tilePrefabs[0].GetComponent<Renderer>();
+        tileSize = (renderer.bounds.size.x) * 0.83f;
 
         lastTilePosition = CalculateTilePosition(playerMover.transform.position);
         CreateInitialGrid();
@@ -85,9 +85,11 @@ public class EndlessTileManager : MonoBehaviour
 
     private void RecycleTileAtPosition(Vector3 position)
     {
+        const float epsilon = 0.1f; // Small value to account for floating point precision errors
+
         foreach (Transform child in transform)
         {
-            if (child.position == position)
+            if (Vector3.Distance(child.position, position) < epsilon)
             {
                 child.gameObject.SetActive(false);
                 tilePool.Enqueue(child.gameObject);
@@ -99,9 +101,9 @@ public class EndlessTileManager : MonoBehaviour
     private Vector3 CalculateTilePosition(Vector3 position, int offsetX = 0, int offsetZ = 0)
     {
         return new Vector3(
-            Mathf.Floor(position.x / tileSize) * tileSize + offsetX * tileSize,
+            Mathf.Round(position.x / tileSize) * tileSize + offsetX * tileSize,
             0,
-            Mathf.Floor(position.z / tileSize) * tileSize + offsetZ * tileSize
+            Mathf.Round(position.z / tileSize) * tileSize + offsetZ * tileSize
         );
     }
 }

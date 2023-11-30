@@ -17,6 +17,7 @@ public class ObjectDestroyer : MonoBehaviour
         StartCoroutine(ManageShadows());
     }
 
+    // Check the distance between the player and all objects with the specified tags
     IEnumerator CheckDistance()
     {
         while (true)

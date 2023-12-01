@@ -24,6 +24,7 @@ public class ObjectDestroyer : MonoBehaviour
         {
             foreach (string tag in tagsToCheck)
             {
+                // Find all objects with the specified tag
                 GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
                 foreach (GameObject go in objectsWithTag)
                 {

@@ -11,6 +11,8 @@ public class PlayerMovement : MonoBehaviour
     // Reference to the Joystick script
     public Joystick joystick; // Assuming the joystick script is named 'Joystick'
 
+    private bool monarch = false; 
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -19,16 +21,27 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Use joystick.Horizontal and joystick.Vertical for movement
-        float moveHorizontal = joystick.Horizontal;
-        float moveVertical = joystick.Vertical;
+        if (monarch == true){
+            joystick.gameObject.SetActive(true);
 
-        Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
-        rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
+            // Use joystick.Horizontal and joystick.Vertical for movement
+            float moveHorizontal = joystick.Horizontal;
+            float moveVertical = joystick.Vertical;
 
-        // Calculate velocity based on the distance moved since the last frame
-        velocity = (rb.position - lastPosition) / Time.deltaTime;
+            Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+            rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
 
-        lastPosition = rb.position;
+            // Calculate velocity based on the distance moved since the last frame
+            velocity = (rb.position - lastPosition) / Time.deltaTime;
+
+            lastPosition = rb.position;}
+        else{
+            joystick.gameObject.SetActive(false);
+
+            velocity = Vector3.zero;
+        }
+    }
+    public void changeInMonarchy(){
+        monarch = !monarch;
     }
 }

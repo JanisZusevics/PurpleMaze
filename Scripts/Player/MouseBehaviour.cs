@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MouseBehaviour : MonoBehaviour
 {
-    public GameObject playerMover; // The target GameObject
+    public GameObject King; // The target GameObject
     public float speedFactor = 1f; // Speed factor for the mouse movement
     public float range = 1f;       // Range within which the mouse does not move towards the playerMover
     private GameManager gameManager; // GameManager instance
@@ -11,6 +11,9 @@ public class MouseBehaviour : MonoBehaviour
     private bool _isDead = false;   // Tracks if the mouse is dead
     private bool _isOnGround = true; // Tracks if the mouse is on the ground
     private int groundContactCount = 0; // Tracks the number of ground contacts
+
+    private bool isKing = false;
+    public GameObject Monarchy;
 
 
     private enum MouseState
@@ -58,10 +61,7 @@ public class MouseBehaviour : MonoBehaviour
 
     void Start()
     {
-        if (gameManager != null)
-        {
-            playerMover = gameManager.playerMover;
-        }
+
         UpdateState(); // Initialize the state
     }
 
@@ -72,23 +72,15 @@ public class MouseBehaviour : MonoBehaviour
             case MouseState.Moving:
                 MoveTowardsPlayerMover();
                 // debug dra a blue line towards the playerMover
-                Debug.DrawLine(transform.position, playerMover.transform.position, Color.blue);
+                Debug.DrawLine(transform.position, King.transform.position, Color.blue);
                 break;
             case MouseState.Ragdoll:
-                // Ragdoll logic here (if any)
-                //check if the mouse is on the ground
-                if (_isOnGround)
-                {
-                    //if the mouse is on the ground, set the state to moving
-                    //currentState = MouseState.Moving;
-                }
-                // while in ragdoll debug draw red line towards the sky
-                Debug.DrawLine(transform.position, transform.position + Vector3.up * 10, Color.red);
+                // Ragdoll logic here
                 break;
             case MouseState.Idle:
                 // Idle logic here
                 //check if the mouse is on the ground and the playerMover is outside range
-                if (_isOnGround && playerMover != null && Vector3.Distance(transform.position, playerMover.transform.position) > range)
+                if (_isOnGround && King != null && Vector3.Distance(transform.position, King.transform.position) > range)
                 {
                     //if the mouse is on the ground and the playerMover is outside range, set the state to moving
                     currentState = MouseState.Moving;
@@ -97,6 +89,8 @@ public class MouseBehaviour : MonoBehaviour
             case MouseState.Death:
                 IsActive = false;
                 //gameManager.PlayerStateChanged(_isActive);
+                isKing = false;
+                Monarchy.GetComponent<Monarchy>().theKingIsDead();
                 Destroy(gameObject);
                 break;
         }
@@ -104,15 +98,15 @@ public class MouseBehaviour : MonoBehaviour
 
     private void MoveTowardsPlayerMover()
     {
-        if (playerMover != null)
+        if (King != null)
         {
             // Calculate the distance to the playerMover object
-            float distance = Vector3.Distance(transform.position, playerMover.transform.position);
+            float distance = Vector3.Distance(transform.position, King.transform.position);
             if (distance > range)
             {
                 // Rotate to face the playerMover object 
                 // with 90 degrees y offset
-                Vector3 direction = playerMover.transform.position - transform.position;
+                Vector3 direction = King.transform.position - transform.position;
                 transform.rotation = Quaternion.LookRotation(direction);
 
                 float distance_multiplier = Mathf.Clamp(distance / 4.5f, 1, 100f);
@@ -169,7 +163,7 @@ public class MouseBehaviour : MonoBehaviour
         {
             currentState = MouseState.Ragdoll;
         }
-        else if (_isActive && playerMover != null && Vector3.Distance(transform.position, playerMover.transform.position) > range)
+        else if (_isActive && King != null && Vector3.Distance(transform.position, King.transform.position) > range)
         {
             currentState = MouseState.Moving;
         }
@@ -177,5 +171,8 @@ public class MouseBehaviour : MonoBehaviour
         {
             currentState = MouseState.Idle;
         }
+    }
+    public void kingMe(){
+        isKing = true;
     }
 }

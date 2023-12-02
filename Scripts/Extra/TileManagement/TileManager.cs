@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EndlessTileManager : MonoBehaviour
 {
-    public GameObject playerMover; // Empty object that player objects move towards
+    public GameManager GameManager; // Empty object that player objects move towards
     [SerializeField] private GameObject[] tilePrefabs;
     private HashSet<Vector3> activeTilePositions = new HashSet<Vector3>();
     private Queue<GameObject> tilePool = new Queue<GameObject>();
@@ -11,19 +11,22 @@ public class EndlessTileManager : MonoBehaviour
     private float tileSize;
     public int gridSize = 3;
 
+
+     private void Awake() {
+        GameManager = GameObject.FindObjectOfType<GameManager>();
+    }
     void Start()
-    {
-        // Calculate the actual size of the tile's mesh
+    {        // Calculate the actual size of the tile's mesh
         Renderer renderer = tilePrefabs[0].GetComponent<Renderer>();
         tileSize = (renderer.bounds.size.x) * 0.83f;
 
-        lastTilePosition = CalculateTilePosition(playerMover.transform.position);
+        lastTilePosition = CalculateTilePosition(GameManager.King.transform.position);
         CreateInitialGrid();
     }
 
     void Update()
     {
-        Vector3 currentTilePosition = CalculateTilePosition(playerMover.transform.position);
+        Vector3 currentTilePosition = CalculateTilePosition(GameManager.King.transform.position);
         if (currentTilePosition != lastTilePosition)
         {
             UpdateGrid(currentTilePosition);

@@ -7,10 +7,14 @@ public class ObjectDestroyer : MonoBehaviour
     public float distanceThreshold = 10f; // Threshold for object destruction
     public float shadowDistanceThreshold = 5f; // Half the distance threshold for shadow management
     public List<string> tagsToCheck; // Tags to check for object management
-    public GameObject playerMover; // Empty object that player objects move towards
+    public GameManager GameManager; // Empty object that player objects move towards
     public float checkInterval = 0.5f; // Interval for checking object distance
     public float shadowCheckInterval = 0.5f; // Interval for checking shadow distance
 
+    void Awake()
+    {
+        GameManager = GameObject.FindObjectOfType<GameManager>();
+    }
     void Start()
     {
         StartCoroutine(CheckDistance());
@@ -28,7 +32,7 @@ public class ObjectDestroyer : MonoBehaviour
                 GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
                 foreach (GameObject go in objectsWithTag)
                 {
-                    float distance = Vector3.Distance(go.transform.position, playerMover.transform.position);
+                    float distance = Vector3.Distance(go.transform.position, GameManager.King.transform.position);
                     if (distance > distanceThreshold)
                     {
                         // if tag is Mouse lower activePlayers
@@ -64,7 +68,7 @@ public class ObjectDestroyer : MonoBehaviour
                 GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
                 foreach (GameObject go in objectsWithTag)
                 {
-                    float distance = Vector3.Distance(go.transform.position, playerMover.transform.position);
+                    float distance = Vector3.Distance(go.transform.position, GameManager.King.transform.position);
                     Renderer renderer = go.GetComponent<Renderer>();
                     if (renderer != null)
                     {

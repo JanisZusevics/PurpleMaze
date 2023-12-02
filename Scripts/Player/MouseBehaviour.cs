@@ -2,21 +2,17 @@ using UnityEngine;
 
 public class MouseBehaviour : MonoBehaviour
 {
-    public GameObject King; // The target GameObject
     public float speedFactor = 1f; // Speed factor for the mouse movement
     public float range = 1f;       // Range within which the mouse does not move towards the playerMover
     private GameManager gameManager; // GameManager instance
 
-    private bool _isActive = false;
+    public bool _isActive = false;
     private bool _isDead = false;   // Tracks if the mouse is dead
     private bool _isOnGround = true; // Tracks if the mouse is on the ground
     private int groundContactCount = 0; // Tracks the number of ground contacts
 
-    private bool isKing = false;
-    public GameObject Monarchy;
-
-
-    private enum MouseState
+    public bool isKing = false;
+    public enum MouseState
     {
         Asleep,
         Idle,
@@ -25,7 +21,7 @@ public class MouseBehaviour : MonoBehaviour
         Death
     }
 
-    private MouseState currentState;
+    public MouseState currentState;
 
     public bool IsActive
     {
@@ -70,9 +66,9 @@ public class MouseBehaviour : MonoBehaviour
         switch (currentState)
         {
             case MouseState.Moving:
-                MoveTowardsPlayerMover();
                 // debug dra a blue line towards the playerMover
-                Debug.DrawLine(transform.position, King.transform.position, Color.blue);
+                
+                Debug.DrawLine(transform.position, gameManager.King.transform.position, Color.blue);
                 break;
             case MouseState.Ragdoll:
                 // Ragdoll logic here
@@ -80,7 +76,7 @@ public class MouseBehaviour : MonoBehaviour
             case MouseState.Idle:
                 // Idle logic here
                 //check if the mouse is on the ground and the playerMover is outside range
-                if (_isOnGround && King != null && Vector3.Distance(transform.position, King.transform.position) > range)
+                if (_isOnGround && gameManager.King != null)
                 {
                     //if the mouse is on the ground and the playerMover is outside range, set the state to moving
                     currentState = MouseState.Moving;
@@ -90,32 +86,12 @@ public class MouseBehaviour : MonoBehaviour
                 IsActive = false;
                 //gameManager.PlayerStateChanged(_isActive);
                 isKing = false;
-                Monarchy.GetComponent<Monarchy>().theKingIsDead();
+                gameManager.theKingIsDead();
                 Destroy(gameObject);
                 break;
         }
     }
 
-    private void MoveTowardsPlayerMover()
-    {
-        if (King != null)
-        {
-            // Calculate the distance to the playerMover object
-            float distance = Vector3.Distance(transform.position, King.transform.position);
-            if (distance > range)
-            {
-                // Rotate to face the playerMover object 
-                // with 90 degrees y offset
-                Vector3 direction = King.transform.position - transform.position;
-                transform.rotation = Quaternion.LookRotation(direction);
-
-                float distance_multiplier = Mathf.Clamp(distance / 4.5f, 1, 100f);
-                Debug.Log($"Distance Multiplier: {distance_multiplier}");
-                // Move forward, with speed directly proportional to the distance from the playerMover
-                transform.Translate(Vector3.forward * speedFactor * distance_multiplier * Time.deltaTime);
-            }
-        }
-    }
 
     void OnCollisionEnter(Collision collision)
     {
@@ -163,7 +139,7 @@ public class MouseBehaviour : MonoBehaviour
         {
             currentState = MouseState.Ragdoll;
         }
-        else if (_isActive && King != null && Vector3.Distance(transform.position, King.transform.position) > range)
+        else if (_isActive && gameManager.King != null && Vector3.Distance(transform.position, gameManager.King.transform.position) > range)
         {
             currentState = MouseState.Moving;
         }

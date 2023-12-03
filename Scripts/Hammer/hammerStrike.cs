@@ -26,6 +26,7 @@ public class HammerStrike : MonoBehaviour
 
     // reference to camera
     private Camera mainCamera;
+    private GameManager gameManager;
 
     private enum State
     {
@@ -40,6 +41,7 @@ public class HammerStrike : MonoBehaviour
 
     void Start()
     {
+        gameManager = GameObject.FindObjectOfType<GameManager>();
         // Get the collider and disable it
         strikeCollider = GetComponent<Collider>();
         strikeCollider.enabled = false;
@@ -56,18 +58,27 @@ public class HammerStrike : MonoBehaviour
         switch (currentState)
         {
             case State.Initializing:
-                InitializeStrike(strikePosition);
+                Debug.Log("Initializing");
+                if (gameManager.kingExists)
+                {
+                    InitializeStrike(strikePosition);
+                }
+                
                 break;
             case State.Telegraphing:
+                Debug.Log("Telegraphing");
                 TelegraphStrike();
                 break;
             case State.Striking:
+                Debug.Log("Striking");
                 PerformStrike();
                 break;
             case State.Retreating:
+                Debug.Log("Retreating");
                 Retreat();
                 break;
             case State.CleaningUp:
+                Debug.Log("CleaningUp");
                 Cleanup();
                 break;
         }

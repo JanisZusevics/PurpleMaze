@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class MouseBehaviour : MonoBehaviour
 {
-    public float speedFactor = 1f; // Speed factor for the mouse movement
-    public float range = 1f;       // Range within which the mouse does not move towards the playerMover
+
     private GameManager gameManager; // GameManager instance
 
     public bool _isActive = false;
@@ -12,6 +11,8 @@ public class MouseBehaviour : MonoBehaviour
     private int groundContactCount = 0; // Tracks the number of ground contacts
 
     public bool isKing = false;
+    
+    private GameObject MouseCrown;
     public enum MouseState
     {
         Asleep,
@@ -53,6 +54,8 @@ public class MouseBehaviour : MonoBehaviour
     void Awake()
     {
         gameManager = GameObject.FindObjectOfType<GameManager>();
+        // find crown child
+        MouseCrown = transform.Find("MouseCrown").gameObject;
     }
 
     void Start()
@@ -63,20 +66,32 @@ public class MouseBehaviour : MonoBehaviour
 
     void Update()
     {
+        if (isKing)
+        {
+            // Toggle crown
+            MouseCrown.SetActive(true);
+        }
+        else
+        {
+            // remove the crown
+            MouseCrown.SetActive(false);
+        }
         switch (currentState)
         {
             case MouseState.Moving:
-                // debug dra a blue line towards the playerMover
-                
-                Debug.DrawLine(transform.position, gameManager.King.transform.position, Color.blue);
+                // Moving logic here
+                // log moving 
+                Debug.DrawLine(transform.position, gameManager.Crown.transform.position, Color.blue);
                 break;
             case MouseState.Ragdoll:
                 // Ragdoll logic here
                 break;
             case MouseState.Idle:
                 // Idle logic here
-                //check if the mouse is on the ground and the playerMover is outside range
-                if (_isOnGround && gameManager.King != null)
+                // log idle 
+                Debug.Log("Idle");
+                //check if the mouse is on the ground 
+                if (_isOnGround)
                 {
                     //if the mouse is on the ground and the playerMover is outside range, set the state to moving
                     currentState = MouseState.Moving;
@@ -85,8 +100,11 @@ public class MouseBehaviour : MonoBehaviour
             case MouseState.Death:
                 IsActive = false;
                 //gameManager.PlayerStateChanged(_isActive);
-                isKing = false;
-                gameManager.theKingIsDead();
+                if (isKing)
+                {
+                    isKing = false;
+                    gameManager.theKingIsDead();
+                }
                 Destroy(gameObject);
                 break;
         }
@@ -106,6 +124,23 @@ public class MouseBehaviour : MonoBehaviour
             if (otherMouse != null && otherMouse.IsActive && !this.IsActive)
             {
                 this.IsActive = true;
+            }
+        }
+        // if collide with a corwn object 
+        else if (collision.gameObject.CompareTag("Crown"))
+        {
+            // if the mouse is not the king
+            if (!isKing)
+            {
+                IsActive = true;
+                // set the mouse to be the king
+                isKing = true;
+                // set the king in the game manager
+                gameManager.appointKing(gameObject);
+                // log the king
+                Debug.Log("King");
+                // set the collided crown to be inactive
+                collision.gameObject.SetActive(false);
             }
         }
     }
@@ -139,7 +174,7 @@ public class MouseBehaviour : MonoBehaviour
         {
             currentState = MouseState.Ragdoll;
         }
-        else if (_isActive && gameManager.King != null && Vector3.Distance(transform.position, gameManager.King.transform.position) > range)
+        else if (_isActive )
         {
             currentState = MouseState.Moving;
         }

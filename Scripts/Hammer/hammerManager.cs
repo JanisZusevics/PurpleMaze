@@ -4,11 +4,18 @@ using System.Collections;
 public class HammerManager : MonoBehaviour
 {
     public GameObject hammerPrefab;
-    public GameObject playerMover;  // Empty object that player objects move towards
+    private GameObject playerMover;  // Empty object that player objects move towards
     public float timeMin = 0.0f;
     public float timeMax = 2.0f;
     public bool isHammerEnabled = true; // Add this line
+    private GameManager gameManager; // GameManager instance
 
+
+    private void Awake()
+    {
+        playerMover = GameObject.Find("Crown");
+        gameManager = GameObject.FindObjectOfType<GameManager>();
+    }
     private void Start()
     {
         Debug.Log("Starting HammerManager...");
@@ -37,7 +44,14 @@ public class HammerManager : MonoBehaviour
         if (hammerStrike != null)
         {
             hammerStrike.OnStrikeEnd += HandleStrikeEnd;
-            hammerStrike.InitializeStrike(averagePosition);
+            // if king exists
+            if (gameManager.kingExists)
+            {
+                // log king exists
+                Debug.Log("King Exists");
+                hammerStrike.InitializeStrike(averagePosition);
+            }
+            
         }
         else
         {

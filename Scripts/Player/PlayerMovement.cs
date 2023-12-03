@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
 
     public float speedFactor = 1f; // Speed factor for the mouse movement
     public float range = 1f;       // Range within which the mouse does not move towards the playerMover
+    public float separationDistance = 2f; // Distance within which the mouse will separate from other mice
+    public float circleSpeed = 3f; // Speed at which the mouse circles around the playerMover
 
     void Awake()
     {
@@ -33,7 +35,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-            // if mouse behvaviour state is moving 
         if (MouseBehaviour.currentState == MouseBehaviour.MouseState.Moving)
         {
             if (MouseBehaviour.isKing == true)
@@ -42,10 +43,26 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                MoveTowardsKing();
+                Vector3 separationForce = CalculateSeparationForce();
+                ApplyForce(separationForce);
+                float distance = Vector3.Distance(transform.position, gameManager.Crown.transform.position);
+                if (distance > range)
+                {
+                    // log moving to king 
+                    Debug.Log("Moving to King");
+                    MoveTowardsKing();
+                }
+                else
+                {
+                    // log circling king
+                    Debug.Log("Circling King");
+                    CircleAroundKing();
+                }
             }
         }
     }
+
+
     // Move king with joystick
     void KingMover()
     {
@@ -67,20 +84,100 @@ public class PlayerMovement : MonoBehaviour
     // Move towards king
     void MoveTowardsKing()
     {
+
         // Calculate the distance to the playerMover object
-        float distance = Vector3.Distance(transform.position, gameManager.King.transform.position);
-        if (distance > range)
+        float distance = Vector3.Distance(transform.position, gameManager.Crown.transform.position);
+        // if king exists we chase the king 
+        if (gameManager.kingExists == true)
         {
-            // Rotate to face the playerMover object 
-            // with 90 degrees y offset
-            Vector3 direction = gameManager.King.transform.position - transform.position;
+            // log chasing king
+            // Calculate a speed multiplier based on the distance
+            // Use a logarithmic function to make the speed drop off more aggressively near the range limit
+            float speedMultiplier = Mathf.Log(Mathf.Max(0, distance - range) + 1);
+
+            // Rotate to face the crown
+            Vector3 direction = gameManager.Crown.transform.position - transform.position;
             transform.rotation = Quaternion.LookRotation(direction);
-            float distance_multiplier = Mathf.Clamp(distance / 4.5f, 1, 100f);
-            Debug.Log($"Distance Multiplier: {distance_multiplier}");
-            // Move forward, with speed directly proportional to the distance from the playerMover
-            transform.Translate(Vector3.forward * speedFactor * distance_multiplier * Time.deltaTime);
+
+            // Move towards the crown, with speed directly proportional to the distance
+            transform.Translate(Vector3.forward * speed * speedMultiplier * Time.deltaTime);
+        }
+        // if king does not exist we chase the crown 
+        else
+        {
+            // log chasing crown
+            // Move towards the crown object
+            Vector3 direction = gameManager.Crown.transform.position - transform.position;
+            transform.rotation = Quaternion.LookRotation(direction);
+            // calculate speed
+            Vector3 desiredSpeed = Vector3.forward * speedFactor * 10 * Time.deltaTime;
+
+            // set the desired speed to at least the minimum speed
+            desiredSpeed = Vector3.ClampMagnitude(desiredSpeed, speedFactor);
+            // log speed
+            //Debug.Log($"Speed: {desiredSpeed}");
+            transform.Translate(desiredSpeed);
         }
     }
+    Vector3 CalculateSeparationForce()
+    {
+        Vector3 separationForce = Vector3.zero;
+        int nearbyMiceCount = 0;
+
+        foreach (var otherMouse in gameManager.AllMice) // Assuming AllMice is a list of all mice
+        {
+            if (otherMouse != this && Vector3.Distance(transform.position, otherMouse.transform.position) < separationDistance)
+            {
+                Vector3 difference = transform.position - otherMouse.transform.position;
+                if (difference.magnitude > Mathf.Epsilon)
+                {
+                    separationForce += difference.normalized / difference.magnitude;
+                    nearbyMiceCount++;
+                }
+            }
+        }
+
+        if (nearbyMiceCount > 0)
+        {
+            separationForce /= nearbyMiceCount;
+        }
+
+        return separationForce;
+    }
+
+
+    void CircleAroundKing()
+    {
+        Vector3 toKing = gameManager.King.transform.position - transform.position;
+        if (toKing.magnitude > Mathf.Epsilon)
+        {
+            Vector3 tangentialForce = Vector3.Cross(Vector3.up, toKing).normalized;
+
+            float distance = toKing.magnitude;
+            if (distance > range)
+            {
+                // Move towards the king
+                Vector3 seekForce = toKing.normalized * speed;
+                ApplyForce(seekForce);
+            }
+
+            // Add the tangential force to create circling behavior
+            ApplyForce(tangentialForce * circleSpeed);
+        }
+    }
+
+
+    void ApplyForce(Vector3 force)
+    {
+        if (float.IsNaN(force.x) || float.IsNaN(force.y) || float.IsNaN(force.z))
+        {
+            Debug.LogError("NaN force detected: " + force);
+            return;
+        }
+        rb.AddForce(force);
+    }
+
+
 }
     
 

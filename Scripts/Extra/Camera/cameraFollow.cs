@@ -16,21 +16,21 @@ public class CameraFollow : MonoBehaviour
     }
     void LateUpdate()
     {
-        if (GameManager.King == null)
+        if (GameManager.Crown == null)
         {
-            Debug.Log("King is null");
+            Debug.Log("Crown is null");
         }
         else
         {
             // Get the playerMover object's position
-            Vector3 playerMoverPosition = GameManager.King.transform.position;
+            Vector3 playerMoverPosition = GameManager.Crown.transform.position;
 
-            // Calculate the desired position, ignoring the y-component of the player's position
-            Vector3 desiredPosition = new Vector3(playerMoverPosition.x, transform.position.y, playerMoverPosition.z) + offset;
+            // Calculate the desired position
+            Vector3 desiredPosition = new Vector3(playerMoverPosition.x, playerMoverPosition.y, playerMoverPosition.z) + offset;
 
-            // Smoothly transition to the new position, ignoring the y-component
-            Vector3 smoothedPosition = Vector3.Lerp(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(desiredPosition.x, 0, desiredPosition.z), smoothSpeed * Time.deltaTime);
-            transform.position = new Vector3(smoothedPosition.x, transform.position.y, smoothedPosition.z);
+            // Smoothly transition to the new position
+            Vector3 smoothedPosition = Vector3.Lerp(new Vector3(transform.position.x,transform.position.y, transform.position.z), new Vector3(desiredPosition.x, desiredPosition.y, desiredPosition.z), smoothSpeed * Time.deltaTime);
+            transform.position = new Vector3(smoothedPosition.x, smoothedPosition.y, smoothedPosition.z);
 
             // If zooming is enabled, adjust the y-component of the camera's position based on the scroll wheel value
             if (isZoomEnabled)

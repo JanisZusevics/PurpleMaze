@@ -32,7 +32,7 @@ public class ObjectDestroyer : MonoBehaviour
                 GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
                 foreach (GameObject go in objectsWithTag)
                 {
-                    float distance = Vector3.Distance(go.transform.position, GameManager.King.transform.position);
+                    float distance = Vector3.Distance(go.transform.position, GameManager.Crown.transform.position);
                     if (distance > distanceThreshold)
                     {
                         // if tag is Mouse lower activePlayers
@@ -68,7 +68,7 @@ public class ObjectDestroyer : MonoBehaviour
                 GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
                 foreach (GameObject go in objectsWithTag)
                 {
-                    float distance = Vector3.Distance(go.transform.position, GameManager.King.transform.position);
+                    float distance = Vector3.Distance(go.transform.position, GameManager.Crown.transform.position);
                     Renderer renderer = go.GetComponent<Renderer>();
                     if (renderer != null)
                     {

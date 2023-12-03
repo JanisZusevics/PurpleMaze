@@ -20,13 +20,13 @@ public class EndlessTileManager : MonoBehaviour
         Renderer renderer = tilePrefabs[0].GetComponent<Renderer>();
         tileSize = (renderer.bounds.size.x) * 0.83f;
 
-        lastTilePosition = CalculateTilePosition(GameManager.King.transform.position);
+        lastTilePosition = CalculateTilePosition(GameManager.Crown.transform.position);
         CreateInitialGrid();
     }
 
     void Update()
     {
-        Vector3 currentTilePosition = CalculateTilePosition(GameManager.King.transform.position);
+        Vector3 currentTilePosition = CalculateTilePosition(GameManager.Crown.transform.position);
         if (currentTilePosition != lastTilePosition)
         {
             UpdateGrid(currentTilePosition);

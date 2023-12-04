@@ -220,10 +220,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 046d6cfae4e2b430aa936fa553f5f999, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 5
   joystick: {fileID: 0}
-  speedFactor: 1
-  range: 5
+  range: 1
+  minSpeed: 0.01
+  turnSpeed: 10.46
+  viewAngle: 180
+  avoidanceDistance: 5
+  viewDistance: 3
+  separationThreshold: 1
+  alignmentWeight: 0.01
+  cohesionWeight: 0.01
+  separationWeight: 50
+  crownWeight: 1
 --- !u!1001 &7239630958233501794
 PrefabInstance:
   m_ObjectHideFlags: 0

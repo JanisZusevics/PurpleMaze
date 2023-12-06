@@ -92,6 +92,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2043436590635042412}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1944860717060066231}
   m_SourcePrefab: {fileID: 100100000, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
 --- !u!4 &361011239679062009 stripped
 Transform:
@@ -174,7 +177,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029425886883886403}
   serializedVersion: 4
-  m_Mass: 5
+  m_Mass: 25.16
   m_Drag: 0.5
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -207,6 +210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isActive: 0
   isKing: 0
+  pushForce: 1000
   currentState: 0
 --- !u!114 &2043436590635042412
 MonoBehaviour:
@@ -221,20 +225,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joystick: {fileID: 0}
-  pushForce: 100
-  speed: 5
-  minimumFollowSpeed: 1
-  maximumFollowSpeed: 10
+  pushForce: 1000
+  speed: 10
   viewDistance: 10
-  separationThreshold: 0.7
-  alignmentWeight: 0.1
-  cohesionWeight: 0.1
-  separationWeight: 20
-  crownWeight: 10
-  joystickWeight: 10
-  maxTurnSpeed: 30
-  turnAcceleration: 0.4
-  velocityAcceleration: 15
+--- !u!114 &1944860717060066231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1029425886883886403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f17f938041e9d4a578586f44a4172887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  joystick: {fileID: 0}
+  viewDistance: 10.34
+  speed: 3.44
+  velocityAcceleration: 1
+  maximumFollowSpeed: 20.14
+  separationThreshold: 50
+  alignmentWeight: 1
+  cohesionWeight: 1
+  separationWeight: 500
+  crownWeight: 5
+  joystickWeight: 2
+  maxTurnSpeed: 7
+  turnAcceleration: 4
 --- !u!1001 &7239630958233501794
 PrefabInstance:
   m_ObjectHideFlags: 0

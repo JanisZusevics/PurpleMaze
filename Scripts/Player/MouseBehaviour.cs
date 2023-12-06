@@ -4,13 +4,18 @@ public class MouseBehaviour : MonoBehaviour
 {
 
     private GameManager gameManager; // GameManager instance
+    private PlayerMovement playerMovement; // PlayerMovement instance
+    private Follower follower; // Follower instance
 
     public bool _isActive = false;
     private bool _isDead = false;   // Tracks if the mouse is dead
     private bool _isOnGround = true; // Tracks if the mouse is on the ground
     private int groundContactCount = 0; // Tracks the number of ground contacts
 
+
     public bool isKing = false;
+
+    public float pushForce = 400f;
     
     private GameObject MouseCrown;
     public enum MouseState
@@ -54,7 +59,8 @@ public class MouseBehaviour : MonoBehaviour
     void Awake()
     {
         gameManager = GameObject.FindObjectOfType<GameManager>();
-        // find crown child
+        playerMovement = GetComponent<PlayerMovement>();
+        follower = GetComponent<Follower>();
         MouseCrown = transform.Find("MouseCrown").gameObject;
     }
 
@@ -64,13 +70,48 @@ public class MouseBehaviour : MonoBehaviour
         UpdateState(); // Initialize the state
     }
 
+    /// <summary>
+    /// This method is called every frame and is responsible for updating the behavior of the mouse.
+    /// </summary>
     void Update()
     {
         if (isKing)
         {
             // Toggle crown
             MouseCrown.SetActive(true);
+            // push all other isActive mice away from the king in a radius
+            Collider[] hitColliders = Physics.OverlapSphere(transform.position, playerMovement.viewDistance*2);
+            int count = 0;
+            foreach (var hitCollider in hitColliders)
+            {
+                if (hitCollider.CompareTag("Mouse"))
+                {
+                    count++;
+                    MouseBehaviour mouseBehaviour = hitCollider.gameObject.GetComponent<MouseBehaviour>();
+                    if (mouseBehaviour != null && mouseBehaviour.IsActive && hitCollider.gameObject != gameObject)
+                    {
+                        // debug draw into sky from mouse
+                        Debug.DrawLine(hitCollider.transform.position, hitCollider.transform.position + Vector3.up * 100, Color.red);
+                        // get the rigidbody of the mouse
+                        Rigidbody otherRb = hitCollider.GetComponent<Rigidbody>();
+                        if (otherRb != null)
+                        {
+                            // get the direction from the mouse to the king
+                            Vector3 direction = (transform.position - hitCollider.transform.position).normalized;
+                            // gradually rotate the mouse away from the king
+                            otherRb.rotation = Quaternion.Slerp(otherRb.rotation, Quaternion.LookRotation(-direction), 0.1f);
+                            // add force to the mouse
+                            // Add a distance multiplier 
+                            float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
+                            float force = Mathf.Log(playerMovement.viewDistance / distance) * pushForce; // Adjust the multiplier as needed
+                            otherRb.AddForce(-direction * force);
+
+                        }
+                    }
+                }
+            }
         }
+
         else
         {
             // remove the crown
@@ -80,6 +121,14 @@ public class MouseBehaviour : MonoBehaviour
         {
             case MouseState.Moving:
                 // Moving logic here
+                if (isKing)
+                {
+                    playerMovement.KingMover();
+                }
+                else
+                {
+                    follower.Follow();
+                }
                 // log moving 
                 Debug.DrawLine(transform.position, gameManager.Crown.transform.position, Color.blue);
                 break;

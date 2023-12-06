@@ -84,29 +84,34 @@ public class MouseBehaviour : MonoBehaviour
             int count = 0;
             foreach (var hitCollider in hitColliders)
             {
+                // log ocunt 
+                Debug.Log($"Count: {count}");
                 if (hitCollider.CompareTag("Mouse"))
                 {
-                    count++;
+                    
                     MouseBehaviour mouseBehaviour = hitCollider.gameObject.GetComponent<MouseBehaviour>();
                     if (mouseBehaviour != null && mouseBehaviour.IsActive && hitCollider.gameObject != gameObject)
                     {
+                        count++;
                         // debug draw into sky from mouse
                         Debug.DrawLine(hitCollider.transform.position, hitCollider.transform.position + Vector3.up * 100, Color.red);
                         // get the rigidbody of the mouse
+                        // log almos t 
+                        Debug.Log("Almost");
                         Rigidbody otherRb = hitCollider.GetComponent<Rigidbody>();
-                        if (otherRb != null)
-                        {
-                            // get the direction from the mouse to the king
-                            Vector3 direction = (transform.position - hitCollider.transform.position).normalized;
-                            // gradually rotate the mouse away from the king
-                            otherRb.rotation = Quaternion.Slerp(otherRb.rotation, Quaternion.LookRotation(-direction), 0.1f);
-                            // add force to the mouse
-                            // Add a distance multiplier 
-                            float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
-                            float force = Mathf.Log(playerMovement.viewDistance / distance) * pushForce; // Adjust the multiplier as needed
-                            otherRb.AddForce(-direction * force);
 
-                        }
+                        // get the direction from the mouse to the king
+                        Vector3 direction = (transform.position - hitCollider.transform.position).normalized;
+                        // gradually rotate the mouse away from the king
+                        otherRb.rotation = Quaternion.Slerp(otherRb.rotation, Quaternion.LookRotation(-direction), 1f);
+                        // add force to the mouse
+                        // Add a distance multiplier 
+                        float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
+                        float force = Mathf.Log(playerMovement.viewDistance / distance) * pushForce; // Adjust the multiplier as needed
+                        // log force
+                        Debug.Log($"Force: {force}");
+                        otherRb.AddForce(direction * force);
+
                     }
                 }
             }

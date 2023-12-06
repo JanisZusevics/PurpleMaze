@@ -210,7 +210,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isActive: 0
   isKing: 0
-  pushForce: 1000
+  pushForce: 1871
   currentState: 0
 --- !u!114 &2043436590635042412
 MonoBehaviour:

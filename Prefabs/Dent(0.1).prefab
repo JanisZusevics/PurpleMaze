@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joystick: {fileID: 0}
-  pushForce: 1000
+  pushForce: 4000
   speed: 10
   viewDistance: 10
 --- !u!114 &1944860717060066231

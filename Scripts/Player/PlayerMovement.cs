@@ -48,29 +48,28 @@ public class PlayerMovement : MonoBehaviour
 
 
         // push all mice away from the king in a radius 
-       //Collider[] hitColliders = Physics.OverlapSphere(transform.position, viewDistance);
-       //foreach (var hitCollider in hitColliders)
-       //{
-       //    if (hitCollider.CompareTag("Mouse") && hitCollider.gameObject.GetComponent<MouseBehaviour>().IsActive && hitCollider.gameObject != gameObject)
-       //    {
-       //        // debug draw into sky from mouse
-       //        Debug.DrawLine(hitCollider.transform.position, hitCollider.transform.position + Vector3.up * 100, Color.red);
-       //        // get the rigidbody of the mouse
-       //        Rigidbody otherRb = hitCollider.GetComponent<Rigidbody>();
-       //        // get the direction from the mouse to the king
-       //        Vector3 direction = (transform.position - hitCollider.transform.position).normalized;
-       //        // rotate mouse to face away from king
-       //        hitCollider.transform.rotation = Quaternion.Slerp(hitCollider.transform.rotation, Quaternion.LookRotation(-direction), 0.05F);
-       //        // apply force to mouse
-       //        otherRb.AddForce(-direction * pushForce);
-       //    }
-       //}
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, viewDistance);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.CompareTag("Mouse") && hitCollider.gameObject.GetComponent<MouseBehaviour>().IsActive && hitCollider.gameObject != gameObject)
+            {
+                // debug draw into sky from mouse
+                Debug.DrawLine(hitCollider.transform.position, hitCollider.transform.position + Vector3.up * 100, Color.red);
+                // get the rigidbody of the mouse
+                Rigidbody otherRb = hitCollider.GetComponent<Rigidbody>();
+                // get the direction from the mouse to the king
+                Vector3 direction = (transform.position - hitCollider.transform.position).normalized;
+                // rotate mouse to face away from king
+                hitCollider.transform.rotation = Quaternion.Slerp(hitCollider.transform.rotation, Quaternion.LookRotation(-direction), 0.05F);
+                // apply force to mouse
+                otherRb.AddForce(-direction * pushForce);
+            }
+        }
         if (movement != Vector3.zero)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.15F);
         }
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0), 0.1f);
-
     }
 
 }

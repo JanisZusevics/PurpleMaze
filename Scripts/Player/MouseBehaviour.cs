@@ -167,6 +167,7 @@ public class MouseBehaviour : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        // if collide with ground
         if (collision.gameObject.CompareTag("Ground"))
         {
             groundContactCount++;

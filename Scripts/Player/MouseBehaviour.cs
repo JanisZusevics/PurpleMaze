@@ -73,7 +73,7 @@ public class MouseBehaviour : MonoBehaviour
     /// <summary>
     /// This method is called every frame and is responsible for updating the behavior of the mouse.
     /// </summary>
-    void Update()
+    void Update() //! This needs refactoring
     {
         if (isKing)
         {
@@ -108,9 +108,12 @@ public class MouseBehaviour : MonoBehaviour
                         // Add a distance multiplier 
                         float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
                         float force = Mathf.Log(playerMovement.viewDistance / distance) * pushForce; // Adjust the multiplier as needed
+                        // make force a positive value
+                        force = Mathf.Abs(force);
                         // log force
                         Debug.Log($"Force: {force}");
-                        otherRb.AddForce(direction * force);
+                        // push the mouse away from the king
+                        otherRb.AddForce(-direction * force);
 
                     }
                 }

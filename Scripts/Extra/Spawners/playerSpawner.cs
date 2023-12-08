@@ -11,7 +11,6 @@ public class PlayerSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        tileSize = GetComponent<Renderer>().bounds.size; // Get the size of the tile
         StartCoroutine(SpawnPlayer()); // Start spawning players
     }
 

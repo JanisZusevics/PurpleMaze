@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class HammerManager : MonoBehaviour
+public class HammerManager : MonoBehaviour //! Needs rework !
 {
     public GameObject hammerPrefab;
     private GameObject playerMover;  // Empty object that player objects move towards

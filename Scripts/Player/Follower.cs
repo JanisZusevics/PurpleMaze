@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Follower : MonoBehaviour
+public class Follower : MonoBehaviour //! Needs rework ! Perhaps a state machine? followCrown, followKing, avoidHammer, avoidMouse
 {
     // LINKS
     private GameManager gameManager; // GameManager instance

@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void KingMover()
     {
+
         joystick.gameObject.SetActive(true);
         float moveHorizontal = joystick.Horizontal;
         float moveVertical = joystick.Vertical;
@@ -69,6 +70,7 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.15F);
         }
+        // reset rotation
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0), 0.1f);
     }
 

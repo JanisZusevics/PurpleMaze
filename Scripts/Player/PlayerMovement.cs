@@ -36,13 +36,14 @@ public class PlayerMovement : MonoBehaviour
 
     public void KingMover()
     {
-
+        // 
         joystick.gameObject.SetActive(true);
         float moveHorizontal = joystick.Horizontal;
         float moveVertical = joystick.Vertical;
         Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical);
+        // move the king
         rb.MovePosition(rb.position + movement * (speed * 2) * Time.deltaTime);
-
+        // calculate velocity of king for mouse push force by dividing the distance moved by the time it took to move that distance
         velocity = (rb.position - lastPosition) / Time.deltaTime;
         lastPosition = rb.position;
 

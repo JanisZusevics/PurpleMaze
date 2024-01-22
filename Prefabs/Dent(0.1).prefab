@@ -96,15 +96,50 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1944860717060066231}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -8391222552659086748, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7450288537413248483}
+      addedObject: {fileID: 1923482508531579986}
   m_SourcePrefab: {fileID: 100100000, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
 --- !u!4 &361011239679062009 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
   m_PrefabInstance: {fileID: 182440530721048594}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &649726976843659894 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -8391222552659086748, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
+  m_PrefabInstance: {fileID: 182440530721048594}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1923482508531579986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649726976843659894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30aca2bf4273746ae96a677b0eb47fa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shellMesh: {fileID: -5495902117074765545, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
+  shellShader: {fileID: 4800000, guid: 96d2b4709c14c44f091004522fc72d1d, type: 3}
+  updateStatics: 1
+  shellCount: 8
+  shellLength: 0.49
+  distanceAttenuation: 1.17
+  density: 339
+  noiseMin: 0
+  noiseMax: 1
+  thickness: 10
+  curvature: 1.6
+  displacementStrength: 0.1
+  shellColor: {r: 1, g: 1, b: 1, a: 0}
+  occlusionAttenuation: 3.09
+  occlusionBias: 1
+  windStrength: 1
+  windFrequency: 1
+  windDirection: {x: 1, y: 0, z: 0}
 --- !u!1 &1029425886883886403 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
@@ -215,36 +250,6 @@ MonoBehaviour:
   joystickWeight: 2
   maxTurnSpeed: 7
   turnAcceleration: 4
---- !u!114 &7450288537413248483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1029425886883886403}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30aca2bf4273746ae96a677b0eb47fa9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shellMesh: {fileID: -5495902117074765545, guid: 583a127d8bf11449f85961cf5c333970, type: 3}
-  shellShader: {fileID: 4800000, guid: 96d2b4709c14c44f091004522fc72d1d, type: 3}
-  updateStatics: 1
-  shellCount: 26
-  shellLength: 0.329
-  distanceAttenuation: 1
-  density: 815
-  noiseMin: 0
-  noiseMax: 1
-  thickness: 6.42
-  curvature: 1
-  displacementStrength: 0.1
-  shellColor: {r: 1, g: 1, b: 1, a: 0}
-  occlusionAttenuation: 1
-  occlusionBias: 0
-  windStrength: 1
-  windFrequency: 1
-  windDirection: {x: 1, y: 0, z: 0}
 --- !u!1001 &7239630958233501794
 PrefabInstance:
   m_ObjectHideFlags: 0

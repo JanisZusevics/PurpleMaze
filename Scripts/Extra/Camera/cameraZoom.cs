@@ -4,7 +4,7 @@ using System.Collections;
 
 public class CameraZoom : MonoBehaviour
 {
-    private GameObject player;
+    public GameObject crown;
 
     // Function to shake the camera
     public void Shake()

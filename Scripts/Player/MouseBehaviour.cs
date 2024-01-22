@@ -85,7 +85,7 @@ public class MouseBehaviour : MonoBehaviour
             foreach (var hitCollider in hitColliders)
             {
                 // log ocunt 
-                Debug.Log($"Count: {count}");
+                //Debug.Log($"Count: {count}");
                 if (hitCollider.CompareTag("Mouse"))
                 {
                     

@@ -48,7 +48,7 @@ public class HammerManager : MonoBehaviour //! Needs rework !
             if (gameManager.kingExists)
             {
                 // log king exists
-                Debug.Log("King Exists");
+                //Debug.Log("King Exists");
                 hammerStrike.InitializeStrike(averagePosition);
             }
             

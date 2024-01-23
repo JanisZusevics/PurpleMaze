@@ -4,19 +4,23 @@ using System.Collections;
 
 public class CameraShake : MonoBehaviour
 {
-    public float shakeDuration = 0.5f; // Duration of the shake in seconds
     public float shakeMagnitude = 0.7f; // Magnitude of the shake
 
     // Function to shake the camera
-    public void Shake()
+    public void Shake(float Distance)
     {
-        StartCoroutine(ShakeCamera());
+        StartCoroutine(ShakeCamera(Distance));
     }
 
-    private IEnumerator ShakeCamera()
+    private IEnumerator ShakeCamera(float Distance)
     {
         //Vector3 originalPos = transform.localPosition;
         float elapsed = 0.0f;
+
+        // shake duration is inversely proportional to the distance from the crown
+        float shakeDuration = (1f / Distance)*10;
+        // log shake duration
+        Debug.Log("Shake Duration: " + shakeDuration);
 
         while (elapsed < shakeDuration)
         {

@@ -97,7 +97,7 @@ public class MouseBehaviour : MonoBehaviour
                         Debug.DrawLine(hitCollider.transform.position, hitCollider.transform.position + Vector3.up * 100, Color.red);
                         // get the rigidbody of the mouse
                         // log almos t 
-                        Debug.Log("Almost");
+                        //Debug.Log("Almost");
                         Rigidbody otherRb = hitCollider.GetComponent<Rigidbody>();
 
                         // get the direction from the mouse to the king
@@ -111,7 +111,7 @@ public class MouseBehaviour : MonoBehaviour
                         // make force a positive value
                         force = Mathf.Abs(force);
                         // log force
-                        Debug.Log($"Force: {force}");
+                        //Debug.Log($"Force: {force}");
                         // push the mouse away from the king
                         otherRb.AddForce(-direction * force);
 
@@ -146,7 +146,7 @@ public class MouseBehaviour : MonoBehaviour
             case MouseState.Idle:
                 // Idle logic here
                 // log idle 
-                Debug.Log("Idle");
+                //Debug.Log("Idle");
                 //check if the mouse is on the ground 
                 if (_isOnGround)
                 {
@@ -196,7 +196,7 @@ public class MouseBehaviour : MonoBehaviour
                 // set the king in the game manager
                 gameManager.appointKing(gameObject);
                 // log the king
-                Debug.Log("King");
+                //Debug.Log("King");
                 // set the collided crown to be inactive
                 collision.gameObject.SetActive(false);
             }
@@ -220,7 +220,7 @@ public class MouseBehaviour : MonoBehaviour
         {
             currentState = MouseState.Death;
             // log death
-            Debug.Log("Mouse Died");
+            //Debug.Log("Mouse Died");
             // Destroy the mouse object
 
         }

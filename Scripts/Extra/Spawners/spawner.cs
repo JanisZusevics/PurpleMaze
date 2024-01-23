@@ -16,10 +16,10 @@ public class Spawner : MonoBehaviour
     {
         crown = GameObject.Find("Crown");
         // log objectToSpawnHeights
-        Debug.Log("before "+ objectToSpawnHeights);
+        //Debug.Log("before "+ objectToSpawnHeights);
         CalculateSpawnerHeights();
         // Log new heights 
-        Debug.Log("After "+objectToSpawnHeights);
+        //Debug.Log("After "+objectToSpawnHeights);
         StartCoroutine(SpawnRandomObjectInRange());
     }
 

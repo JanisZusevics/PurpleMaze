@@ -58,7 +58,7 @@ public class HammerStrike : MonoBehaviour
         switch (currentState)
         {
             case State.Initializing:
-                Debug.Log("Initializing");
+                //Debug.Log("Initializing");
                 if (gameManager.kingExists)
                 {
                     InitializeStrike(strikePosition);
@@ -66,19 +66,19 @@ public class HammerStrike : MonoBehaviour
                 
                 break;
             case State.Telegraphing:
-                Debug.Log("Telegraphing");
+                //Debug.Log("Telegraphing");
                 TelegraphStrike();
                 break;
             case State.Striking:
-                Debug.Log("Striking");
+                //Debug.Log("Striking");
                 PerformStrike();
                 break;
             case State.Retreating:
-                Debug.Log("Retreating");
+                //Debug.Log("Retreating");
                 Retreat();
                 break;
             case State.CleaningUp:
-                Debug.Log("CleaningUp");
+                //Debug.Log("CleaningUp");
                 Cleanup();
                 break;
         }
@@ -160,7 +160,9 @@ public class HammerStrike : MonoBehaviour
                         CameraShake cameraShake = mainCamera.GetComponent<CameraShake>();
                         if (cameraShake != null)
                         {
-                            cameraShake.Shake();
+                            // calculate the distance from the hammer to the crown
+                            float distanceToCrown = Vector3.Distance(transform.position, gameManager.Crown.transform.position);
+                            cameraShake.Shake(distanceToCrown);
                         }
                         else
                         {
@@ -176,7 +178,7 @@ public class HammerStrike : MonoBehaviour
         }
         hammerRenderer.material = hammerMaterial; // Change material back to hammer material
         // log material 
-        Debug.Log("Material Changed");
+        //Debug.Log("Material Changed");
         StartCoroutine(EnableColliderDuringStrike());
         currentState = State.Retreating;
     }
@@ -220,11 +222,11 @@ public class HammerStrike : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Hammer strike collided with " + other.gameObject.name);
+        //Debug.Log("Hammer strike collided with " + other.gameObject.name);
         // If the hammer strike collides with a player, delete the player
         if (other.gameObject.CompareTag("Mouse") && other.gameObject.GetComponent<MouseBehaviour>().IsActive)
         {
-            Debug.Log("Hammer strike collided with active player, deleting player...");
+            //Debug.Log("Hammer strike collided with active player, deleting player...");
             // set mouse isDead to true
             other.gameObject.GetComponent<MouseBehaviour>().IsDead = true;
         }

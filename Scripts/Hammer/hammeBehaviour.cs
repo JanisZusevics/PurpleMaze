@@ -6,9 +6,10 @@ public class hammeBehaviour : MonoBehaviour
 {
 
     public GameObject crown;
+    private Vector3 crownPosition;
     private GameObject hammer;
+    private Vector3 desiredPosition;
 
-    # list states 
     public enum State
     {
         Awakening,
@@ -29,24 +30,47 @@ public class hammeBehaviour : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        crownPosition = crown.transform.position;
+        getDesiredPosition();
     }
 
     // Update is called once per frame
     void Update()
     {
-        crownPosition = crown.transform.position;
+
 
         ElasticMovement(desiredPosition);
         switch (currentState)
         {
             case State.Awakening:
+                // while hammer is not within 1f of desired position
+                if (Vector3.Distance(transform.position, desiredPosition) > 1f)
+                {
+                    // move hammer towards desired position
+                    transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * 5);
+                }
+                else
+                {
+                    // set state to following
+                    currentState = State.Following;
+                }
+
                 break;
             case State.Following:
                 break;
             case State.Striking:
                 break;
         }
+    }
+
+
+
+    private void getDesiredPosition()
+    {
+        // set desired position to crown position
+        desiredPosition = crownPosition;
+        // set desired position y to 0
+        desiredPosition.y = 10;
     }
 
     /// <summary>
@@ -65,5 +89,5 @@ public class hammeBehaviour : MonoBehaviour
             // Move the hammer towards the desired position
             transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * 5);
         }
-    }
+    }  
 }

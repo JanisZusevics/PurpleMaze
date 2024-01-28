@@ -9,6 +9,7 @@ public class hammeBehaviour : MonoBehaviour
     private Vector3 crownPosition;
     private GameObject hammer;
     private Vector3 desiredPosition;
+    public float floatingHeight = 30.0f;
 
     public enum State
     {
@@ -80,7 +81,7 @@ public class hammeBehaviour : MonoBehaviour
         // set desired position to crown position
         desiredPosition = crownPosition;
         // set desired position y to 0
-        desiredPosition.y = 30;
+        desiredPosition.y = floatingHeight;
     }
 
     /// <summary>

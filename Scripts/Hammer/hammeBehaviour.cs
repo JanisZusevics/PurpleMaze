@@ -10,6 +10,10 @@ public class hammeBehaviour : MonoBehaviour
     private GameObject hammer;
     private Vector3 desiredPosition;
     public float floatingHeight = 30.0f;
+    public float startingHeight = 90.0f;
+    private Vector3 velocity = Vector3.zero; // Add this line
+    public float hammerHeightSize = 50f;
+
 
     public enum State
     {
@@ -23,7 +27,7 @@ public class hammeBehaviour : MonoBehaviour
         // Set hammer as self 
         hammer = this.gameObject;
         // set hammer position high above the crown
-        hammer.transform.position = new Vector3(crown.transform.position.x, crown.transform.position.y + 20, crown.transform.position.z);
+        hammer.transform.position = new Vector3(crown.transform.position.x, crown.transform.position.y + startingHeight, crown.transform.position.z);
 
         currentState = State.Awakening;
     }
@@ -39,9 +43,9 @@ public class hammeBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // debug log the hammer state 
+        Debug.Log(currentState);
 
-
-        ElasticMovement(desiredPosition);
         switch (currentState)
         {
             case State.Awakening:
@@ -49,7 +53,7 @@ public class hammeBehaviour : MonoBehaviour
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
                     // move hammer towards desired position
-                    transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * 5);
+                    ElasticMovement(desiredPosition);
                 }
                 else
                 {
@@ -65,30 +69,56 @@ public class hammeBehaviour : MonoBehaviour
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
                     // move hammer towards desired position
-                    transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * 5);
+                    ElasticMovement(desiredPosition);
+                }
+                else
+                {
+                    // set state to striking
+                    getDesiredPosition(true);
+                    currentState = State.Striking;
                 }
                 break;
             case State.Striking:
+                // set desired position to crown position
+                // while hammer is not within 1f of desired position
+                if (Vector3.Distance(transform.position, desiredPosition) > 1f)
+                {
+                    // move hammer towards desired position
+                    AggressiveMovement(desiredPosition,0.5f);
+                }
+                else
+                {
+                    // set state to following
+                    currentState = State.Following;
+                }
                 break;
         }
     }
 
 
 
-    private void getDesiredPosition()
+    private void getDesiredPosition(bool Strike = false)
     {
         crownPosition = crown.transform.position;
         // set desired position to crown position
         desiredPosition = crownPosition;
         // set desired position y to 0
-        desiredPosition.y = floatingHeight;
+        if (Strike)
+        {
+            desiredPosition.y = hammerHeightSize;
+        }
+        else
+        {
+            desiredPosition.y = floatingHeight;
+        }
     }
+
 
     /// <summary>
     /// Moves the hammer smoothly towards the desired position
     /// </summary>
     /// <param name="desiredPosition"></param>
-    private void ElasticMovement(Vector3 desiredPosition)
+    private void ElasticMovement(Vector3 desiredPosition, float smoothTime = 0.9F)
     {
         // Set the desired position
         this.desiredPosition = desiredPosition;
@@ -98,7 +128,46 @@ public class hammeBehaviour : MonoBehaviour
         if (distance > 0.1f)
         {
             // Move the hammer towards the desired position
-            transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime * 5);
+            smoothTime = 0.9F; // Adjust this value to change the speed of the movement
+            transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothTime);
         }
-    }  
+    }
+    private void AggressiveMovement(Vector3 desiredPosition, float acceleration = 0.1f)
+    {
+        // Set the desired position
+        this.desiredPosition = desiredPosition;
+        // Calculate the distance between the current position and the desired position
+        float distance = Vector3.Distance(transform.position, desiredPosition);
+        // If the distance is greater than 0.1f
+        if (distance > 0.1f)
+        {
+            // Increase speed over time
+            acceleration += Time.deltaTime;
+            // Move the hammer towards the desired position
+            transform.position = Vector3.MoveTowards(transform.position, desiredPosition, acceleration);
+        }
+        else
+        {
+            // Reset speed when the desired position is reached
+            acceleration = 0.1f;
+        }
+    }
+    private void Telegraph()
+    {
+        //  store curennt desired position height 
+        float currentHeight = desiredPosition.y;
+        // set new desired position height 
+        desiredPosition.y = floatingHeight+10;
+        // while hammer is not within 1f of desired position
+        if (Vector3.Distance(transform.position, desiredPosition) > 1f)
+        {
+            // move hammer towards desired position
+            AggressiveMovement(desiredPosition, 0.5f);
+        }
+        else
+        {
+            // set state to striking
+            currentState = State.Striking;
+        }
+    }
 }

@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+///  Hammer behaviour script using math animations 
+/// </summary>
 public class hammeBehaviour : MonoBehaviour
 {
 

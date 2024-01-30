@@ -14,9 +14,10 @@ public class hammeBehaviour : MonoBehaviour
     private GameObject hammer;
     private Vector3 desiredPosition;
     public float floatingHeight = 30.0f;
-    public float startingHeight = 90.0f;
-    private Vector3 velocity = Vector3.zero; // Add this line
+    private Vector3 velocity = Vector3.zero; // Reference velocity for the SmoothDamp method
     public float hammerHeightSize = 50f;
+    public float elasticSpeed = 0.5f;
+    public float elasticSpeedIncrease = 0.1f;
 
 
     public enum State
@@ -31,9 +32,9 @@ public class hammeBehaviour : MonoBehaviour
         // Set hammer as self 
         hammer = this.gameObject;
         // set hammer position high above the crown
-        hammer.transform.position = new Vector3(crown.transform.position.x, crown.transform.position.y + startingHeight, crown.transform.position.z);
-
-        currentState = State.Awakening;
+        hammer.transform.position = new Vector3(crown.transform.position.x, crown.transform.position.y + (floatingHeight*3), crown.transform.position.z);
+        // set state to awakening  
+        enterState(State.Awakening);
     }
     // Start is called before the first frame update
     void Start()
@@ -47,8 +48,6 @@ public class hammeBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // debug log the hammer state 
-        Debug.Log(currentState);
 
         switch (currentState)
         {
@@ -62,7 +61,7 @@ public class hammeBehaviour : MonoBehaviour
                 else
                 {
                     // set state to following
-                    currentState = State.Following;
+                    enterState(State.Following);
                 }
 
                 break;
@@ -72,14 +71,17 @@ public class hammeBehaviour : MonoBehaviour
                 // while hammer is not within 1f of desired position
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
+                    // log elastic speed
+                    Debug.Log(elasticSpeed);
+                    elasticSpeed = elasticSpeed*0.97f;
                     // move hammer towards desired position
-                    ElasticMovement(desiredPosition);
+                    ElasticMovement(desiredPosition, elasticSpeed);
                 }
                 else
                 {
                     // set state to striking
                     getDesiredPosition(true);
-                    currentState = State.Striking;
+                    enterState(State.Striking);
                 }
                 break;
             case State.Striking:
@@ -93,7 +95,7 @@ public class hammeBehaviour : MonoBehaviour
                 else
                 {
                     // set state to following
-                    currentState = State.Following;
+                    enterState(State.Following);
                 }
                 break;
         }
@@ -122,7 +124,7 @@ public class hammeBehaviour : MonoBehaviour
     /// Moves the hammer smoothly towards the desired position
     /// </summary>
     /// <param name="desiredPosition"></param>
-    private void ElasticMovement(Vector3 desiredPosition, float smoothTime = 0.9F)
+    private void ElasticMovement(Vector3 desiredPosition, float smoothTime = 0.5f)
     {
         // Set the desired position
         this.desiredPosition = desiredPosition;
@@ -132,7 +134,6 @@ public class hammeBehaviour : MonoBehaviour
         if (distance > 0.1f)
         {
             // Move the hammer towards the desired position
-            smoothTime = 0.9F; // Adjust this value to change the speed of the movement
             transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothTime);
         }
     }
@@ -172,6 +173,33 @@ public class hammeBehaviour : MonoBehaviour
         {
             // set state to striking
             currentState = State.Striking;
+        }
+    }
+
+    // execute code when entering state
+    private void enterState(State state)
+    {
+        // log state change
+        Debug.Log($"State changed to {state}");
+        switch (state)
+        {
+            case State.Awakening:
+                // set desired position to crown position
+                getDesiredPosition();
+                break;
+            case State.Following:
+                // set desired position to crown position
+                getDesiredPosition();
+                elasticSpeed = 0.5f;
+                // set statw to following
+                currentState = State.Following;
+                break;
+            case State.Striking:
+                // set desired position to crown position
+                getDesiredPosition(true);
+                // set state to striking
+                currentState = State.Striking;
+                break;
         }
     }
 }

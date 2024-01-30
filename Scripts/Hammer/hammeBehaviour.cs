@@ -18,12 +18,14 @@ public class hammeBehaviour : MonoBehaviour
     public float hammerHeightSize = 50f;
     public float elasticSpeed = 0.5f;
     public float elasticSpeedIncrease = 0.1f;
+    public Vector3 desiredRotation = new Vector3(0, 0, 0);
 
 
     public enum State
     {
         Awakening,
         Following,
+        Telegraphing,
         Striking
     }
     private State currentState;
@@ -81,6 +83,21 @@ public class hammeBehaviour : MonoBehaviour
                 {
                     // set state to striking
                     getDesiredPosition(true);
+                    enterState(State.Telegraphing);
+                }
+                break;
+            case State.Telegraphing:
+                // set desired position to crown position
+                // while hammer is not within 1f of desired position
+                if (Vector3.Distance(transform.position, desiredPosition) > 1f)
+                {
+                    // move hammer towards desired position
+                    AggressiveMovement(desiredPosition,0.5f);
+                }
+                else
+                {
+                    desiredPosition = crownPosition;/ / / / /
+                    // set state to striking
                     enterState(State.Striking);
                 }
                 break;
@@ -94,7 +111,7 @@ public class hammeBehaviour : MonoBehaviour
                 }
                 else
                 {
-                    // set state to following
+                    desiredPosition = 
                     enterState(State.Following);
                 }
                 break;
@@ -103,7 +120,7 @@ public class hammeBehaviour : MonoBehaviour
 
 
 
-    private void getDesiredPosition(bool Strike = false)
+    private void getDesiredPosition(float xOffSet = 0, float yOffSet = 0, float zOffSet = 0)
     {
         crownPosition = crown.transform.position;
         // set desired position to crown position
@@ -117,6 +134,10 @@ public class hammeBehaviour : MonoBehaviour
         {
             desiredPosition.y = floatingHeight;
         }
+        // Add offsets to desired position
+        desiredPosition.x += xOffSet;
+        desiredPosition.y += yOffSet;
+        desiredPosition.z += zOffSet;    
     }
 
 
@@ -157,22 +178,17 @@ public class hammeBehaviour : MonoBehaviour
             acceleration = 0.1f;
         }
     }
-    private void Telegraph()
+    private void Rotator(float xRotation, float yRotation, float zRotation)
     {
-        //  store curennt desired position height 
-        float currentHeight = desiredPosition.y;
-        // set new desired position height 
-        desiredPosition.y = floatingHeight+10;
-        // while hammer is not within 1f of desired position
-        if (Vector3.Distance(transform.position, desiredPosition) > 1f)
+        // Set the desired rotation
+        Quaternion desiredRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
+        // Calculate the distance between the current rotation and the desired rotation
+        float distance = Quaternion.Distance(transform.rotation, desiredRotation);
+        // If the distance is greater than 0.1f
+        if (distance > 0.1f)
         {
-            // move hammer towards desired position
-            AggressiveMovement(desiredPosition, 0.5f);
-        }
-        else
-        {
-            // set state to striking
-            currentState = State.Striking;
+            // Rotate the hammer towards the desired rotation
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, desiredRotation, 1f);
         }
     }
 
@@ -184,10 +200,14 @@ public class hammeBehaviour : MonoBehaviour
         switch (state)
         {
             case State.Awakening:
+                desiredRotation = new Vector3(0, 0, 0);
                 // set desired position to crown position
                 getDesiredPosition();
+                // set state to awakening
+                currentState = State.Awakening;
                 break;
             case State.Following:
+                desiredRotation = new Vector3(0, 0, 0);
                 // set desired position to crown position
                 getDesiredPosition();
                 elasticSpeed = 0.5f;
@@ -195,6 +215,7 @@ public class hammeBehaviour : MonoBehaviour
                 currentState = State.Following;
                 break;
             case State.Striking:
+                desiredRotation = new Vector3(0, 0, -75);
                 // set desired position to crown position
                 getDesiredPosition(true);
                 // set state to striking

@@ -17,7 +17,7 @@ public class hammeBehaviour : MonoBehaviour
     private Vector3 velocity = Vector3.zero; // Reference velocity for the SmoothDamp method
     public float hammerHeightSize = 50f;
     public float elasticSpeed = 0.5f;
-    public float elasticSpeedIncrease = 0.1f;
+    public float elasticSpeedIncrease = 0.01f;
     public Vector3 desiredRotation = new Vector3(0, 0, 0);
 
 
@@ -58,7 +58,7 @@ public class hammeBehaviour : MonoBehaviour
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
                     // move hammer towards desired position
-                    ElasticMovement(desiredPosition);
+                    ElasticMovement();
                 }
                 else
                 {
@@ -74,15 +74,14 @@ public class hammeBehaviour : MonoBehaviour
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
                     // log elastic speed
-                    Debug.Log(elasticSpeed);
-                    elasticSpeed = elasticSpeed*0.97f;
+                    elasticSpeed = (elasticSpeed*0.99f);
                     // move hammer towards desired position
-                    ElasticMovement(desiredPosition, elasticSpeed);
+                    ElasticMovement(elasticSpeed);
                 }
                 else
                 {
                     // set state to striking
-                    getDesiredPosition(true);
+                    getDesiredPosition(yOffSet: hammerHeightSize);
                     enterState(State.Telegraphing);
                 }
                 break;
@@ -92,11 +91,11 @@ public class hammeBehaviour : MonoBehaviour
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
                     // move hammer towards desired position
-                    AggressiveMovement(desiredPosition,0.5f);
+                    AggressiveMovement();
                 }
                 else
                 {
-                    desiredPosition = crownPosition;/ / / / /
+                    getDesiredPosition(yOffSet: -hammerHeightSize);
                     // set state to striking
                     enterState(State.Striking);
                 }
@@ -107,11 +106,10 @@ public class hammeBehaviour : MonoBehaviour
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
                     // move hammer towards desired position
-                    AggressiveMovement(desiredPosition,0.5f);
+                    AggressiveMovement();
                 }
                 else
                 {
-                    desiredPosition = 
                     enterState(State.Following);
                 }
                 break;
@@ -125,15 +123,7 @@ public class hammeBehaviour : MonoBehaviour
         crownPosition = crown.transform.position;
         // set desired position to crown position
         desiredPosition = crownPosition;
-        // set desired position y to 0
-        if (Strike)
-        {
-            desiredPosition.y = hammerHeightSize;
-        }
-        else
-        {
-            desiredPosition.y = floatingHeight;
-        }
+
         // Add offsets to desired position
         desiredPosition.x += xOffSet;
         desiredPosition.y += yOffSet;
@@ -145,10 +135,8 @@ public class hammeBehaviour : MonoBehaviour
     /// Moves the hammer smoothly towards the desired position
     /// </summary>
     /// <param name="desiredPosition"></param>
-    private void ElasticMovement(Vector3 desiredPosition, float smoothTime = 0.5f)
+    private void ElasticMovement(float smoothTime = 0.5f)
     {
-        // Set the desired position
-        this.desiredPosition = desiredPosition;
         // Calculate the distance between the current position and the desired position
         float distance = Vector3.Distance(transform.position, desiredPosition);
         // If the distance is greater than 0.1f
@@ -158,10 +146,8 @@ public class hammeBehaviour : MonoBehaviour
             transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref velocity, smoothTime);
         }
     }
-    private void AggressiveMovement(Vector3 desiredPosition, float acceleration = 0.1f)
+    private void AggressiveMovement(float acceleration = 0.1f)
     {
-        // Set the desired position
-        this.desiredPosition = desiredPosition;
         // Calculate the distance between the current position and the desired position
         float distance = Vector3.Distance(transform.position, desiredPosition);
         // If the distance is greater than 0.1f
@@ -183,8 +169,7 @@ public class hammeBehaviour : MonoBehaviour
         // Set the desired rotation
         Quaternion desiredRotation = Quaternion.Euler(xRotation, yRotation, zRotation);
         // Calculate the distance between the current rotation and the desired rotation
-        float distance = Quaternion.Distance(transform.rotation, desiredRotation);
-        // If the distance is greater than 0.1f
+        float distance = Quaternion.Angle(transform.rotation, desiredRotation);        // If the distance is greater than 0.1f
         if (distance > 0.1f)
         {
             // Rotate the hammer towards the desired rotation
@@ -214,10 +199,18 @@ public class hammeBehaviour : MonoBehaviour
                 // set statw to following
                 currentState = State.Following;
                 break;
+
+            case State.Telegraphing:
+                desiredRotation = new Vector3(0, 0, 75);
+                // set desired position to crown position
+                getDesiredPosition(yOffSet: hammerHeightSize);
+                // set state to telegraphing
+                currentState = State.Telegraphing;
+                break;
             case State.Striking:
                 desiredRotation = new Vector3(0, 0, -75);
                 // set desired position to crown position
-                getDesiredPosition(true);
+                getDesiredPosition(yOffSet: -hammerHeightSize);
                 // set state to striking
                 currentState = State.Striking;
                 break;

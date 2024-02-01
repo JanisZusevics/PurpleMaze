@@ -126,7 +126,13 @@ public class hammeBehaviour : MonoBehaviour
         // Add offsets to desired position
         desiredPosition.x += xOffSet;
         desiredPosition.y += yOffSet;
-        desiredPosition.z += zOffSet;    
+        desiredPosition.z += zOffSet;  
+
+        // calculate the x and y angle required to face the desired position
+        float xAngle = Mathf.Atan2(desiredPosition.x - transform.position.x, desiredPosition.y - transform.position.y) * Mathf.Rad2Deg;
+        float yAngle = Mathf.Atan2(desiredPosition.y - transform.position.y, desiredPosition.x - transform.position.x) * Mathf.Rad2Deg;
+        // set the desired rotation to the calculated angles
+        desiredRotation = new Vector3(0, -yAngle, desiredRotation.z);  
     }
 
 
@@ -184,14 +190,14 @@ public class hammeBehaviour : MonoBehaviour
         switch (state)
         {
             case State.Awakening:
-                desiredRotation = new Vector3(0, 0, 0);
+                desiredRotation = new Vector3(desiredRotation.x, desiredRotation.y, 0);
                 // set desired position to crown position
                 getDesiredPosition(yOffSet: floatingHeight);
                 // set state to awakening
                 currentState = State.Awakening;
                 break;
             case State.Following:
-                desiredRotation = new Vector3(0, 0, 0);
+                desiredRotation = new Vector3(desiredRotation.x, desiredRotation.y, 0);
                 // set desired position to crown position
                 elasticSpeed = 0.5f;
                 // set statw to following
@@ -199,14 +205,14 @@ public class hammeBehaviour : MonoBehaviour
                 break;
 
             case State.Telegraphing:
-                desiredRotation = new Vector3(0, 0, -55);
+                desiredRotation = new Vector3(desiredRotation.x, desiredRotation.y, -55);
                 // set desired position to crown position
                 desiredPosition.y += hammerHeightSize*2;
                 // set state to telegraphing
                 currentState = State.Telegraphing;
                 break;
             case State.Striking:
-                desiredRotation = new Vector3(0, 0, 0);
+                desiredRotation = new Vector3(desiredRotation.x, desiredRotation.y, 0);
                 // set desired position to crown position
                 desiredPosition.y = hammerHeightSize;
                 // set state to striking

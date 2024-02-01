@@ -15,7 +15,7 @@ public class hammeBehaviour : MonoBehaviour
     private Vector3 desiredPosition;
     public float floatingHeight = 30.0f;
     private Vector3 velocity = Vector3.zero; // Reference velocity for the SmoothDamp method
-    public float hammerHeightSize = 1f;
+    public float hammerHeightSize = 8f;
     public float elasticSpeed = 0.5f;
     public float elasticSpeedIncrease = 1.2f;
     public Vector3 desiredRotation = new Vector3(0, 0, 0);
@@ -71,6 +71,7 @@ public class hammeBehaviour : MonoBehaviour
                 // set desired position to crown position
                 getDesiredPosition( yOffSet: floatingHeight);
                 // while hammer is not within 1f of desired position
+                Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
                     elasticSpeed = elasticSpeed*0.97f;
@@ -85,10 +86,11 @@ public class hammeBehaviour : MonoBehaviour
             case State.Telegraphing:
                 // set desired position to crown position
                 // while hammer is not within 1f of desired position
+                Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
                     // move hammer towards desired position
-                    AggressiveMovement();
+                    AggressiveMovement(acceleration: 0.7f);
                 }
                 else
                 {
@@ -99,10 +101,11 @@ public class hammeBehaviour : MonoBehaviour
             case State.Striking:
                 // set desired position to crown position
                 // while hammer is not within 1f of desired position
+                Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
                 {
                     // move hammer towards desired position
-                    AggressiveMovement(acceleration: 0.5f);
+                    AggressiveMovement(acceleration: 0.75f);
                 }
                 else
                 {
@@ -196,14 +199,14 @@ public class hammeBehaviour : MonoBehaviour
                 break;
 
             case State.Telegraphing:
-                desiredRotation = new Vector3(0, 0, 75);
+                desiredRotation = new Vector3(0, 0, -55);
                 // set desired position to crown position
-                desiredPosition.y += hammerHeightSize;
+                desiredPosition.y += hammerHeightSize*2;
                 // set state to telegraphing
                 currentState = State.Telegraphing;
                 break;
             case State.Striking:
-                desiredRotation = new Vector3(0, 0, -75);
+                desiredRotation = new Vector3(0, 0, 0);
                 // set desired position to crown position
                 desiredPosition.y = hammerHeightSize;
                 // set state to striking

@@ -128,11 +128,13 @@ public class hammeBehaviour : MonoBehaviour
         desiredPosition.y += yOffSet;
         desiredPosition.z += zOffSet;  
 
-        // calculate the x and y angle required to face the desired position
-        float xAngle = Mathf.Atan2(desiredPosition.x - transform.position.x, desiredPosition.y - transform.position.y) * Mathf.Rad2Deg;
-        float yAngle = Mathf.Atan2(desiredPosition.y - transform.position.y, desiredPosition.x - transform.position.x) * Mathf.Rad2Deg;
+        // calculate the y angle required to face the desired position
+        float yAngle = Mathf.Atan2(desiredPosition.x - transform.position.x, desiredPosition.z - transform.position.z) * Mathf.Rad2Deg;
+        // add a 90 degree offset to the angle
+        yAngle += 90;
+
         // set the desired rotation to the calculated angles
-        desiredRotation = new Vector3(0, -yAngle, desiredRotation.z);  
+        desiredRotation = new Vector3(0, yAngle, desiredRotation.z);  
     }
 
 

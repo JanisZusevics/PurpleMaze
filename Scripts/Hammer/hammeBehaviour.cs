@@ -9,6 +9,7 @@ using UnityEngine;
 public class hammeBehaviour : MonoBehaviour
 {
 
+    private GameManager gameManager;
     public GameObject crown;
     private Vector3 crownPosition;
     private GameObject hammer;
@@ -19,6 +20,10 @@ public class hammeBehaviour : MonoBehaviour
     public float elasticSpeed = 0.5f;
     public float elasticSpeedIncrease = 1.2f;
     public Vector3 desiredRotation = new Vector3(0, 0, 0);
+
+    public float launchRadius = 30.0f;
+    public float launchMultiplier = 50000.0f;
+
 
 
     public enum State
@@ -31,6 +36,9 @@ public class hammeBehaviour : MonoBehaviour
     private State currentState;
     void Awake()
     {
+        gameManager = GameObject.FindObjectOfType<GameManager>();
+
+        crown = gameManager.Crown;
         // Set hammer as self 
         hammer = this.gameObject;
         // set hammer position high above the crown
@@ -69,7 +77,9 @@ public class hammeBehaviour : MonoBehaviour
                 break;
             case State.Following:
                 // set desired position to crown position
-                getDesiredPosition( yOffSet: floatingHeight);
+                if (gameManager.King.GetComponent<MouseBehaviour>().currentState != MouseBehaviour.MouseState.Ragdoll)
+                { getDesiredPosition(yOffSet: floatingHeight); }
+
                 // while hammer is not within 1f of desired position
                 Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
                 if (Vector3.Distance(transform.position, desiredPosition) > 1f)
@@ -109,6 +119,7 @@ public class hammeBehaviour : MonoBehaviour
                 }
                 else
                 {
+                    Strike();
                     enterState(State.Following);
                 }
                 break;
@@ -184,11 +195,41 @@ public class hammeBehaviour : MonoBehaviour
         }
     }
 
+    private void Strike()
+    {
+        // Launch collider 
+        // Create a second, larger collider
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, launchRadius);
+        // Apply an upward force to player objects
+        foreach (Collider hitCollider in hitColliders)
+            {
+                MouseBehaviour mouseBehaviour = hitCollider.gameObject.GetComponent<MouseBehaviour>();
+                if (mouseBehaviour != null && mouseBehaviour.IsActive)
+                {
+                    // log mouse found 
+                    Debug.Log("Mouse Found");
+                    Rigidbody playerRigidbody = hitCollider.gameObject.GetComponent<Rigidbody>();
+                    if (playerRigidbody != null)
+                    {
+                        // Calculate the force based on the distance to the player
+                        float distance = Vector3.Distance(transform.position, hitCollider.transform.position);
+                        float force = Mathf.Log(launchRadius / distance) * launchMultiplier; // Adjust the multiplier as needed
+
+                        // Calculate the direction from the hammer to the mouse
+                        Vector3 direction = (hitCollider.transform.position - transform.position).normalized + Vector3.up;
+                        
+                        // log difection times force
+                        Debug.Log(direction * force);
+                        // Apply the force in the calculated direction
+                        playerRigidbody.AddForce(direction * force, ForceMode.Impulse);
+                }
+            }
+        }
+    }
+
     // execute code when entering state
     private void enterState(State state)
     {
-        // log state change
-        Debug.Log($"State changed to {state}");
         switch (state)
         {
             case State.Awakening:

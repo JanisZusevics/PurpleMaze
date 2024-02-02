@@ -176,6 +176,13 @@ public class MouseBehaviour : MonoBehaviour
             groundContactCount++;
             UpdateState();
         }
+        else if (collision.gameObject.CompareTag("Hammer"))
+        {
+            // log hit
+            Debug.Log("Hit");
+            IsDead = true;
+            UpdateState();
+        }
         else if (collision.gameObject.CompareTag("Mouse"))
         {
             MouseBehaviour otherMouse = collision.gameObject.GetComponent<MouseBehaviour>();

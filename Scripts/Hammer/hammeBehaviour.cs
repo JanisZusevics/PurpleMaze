@@ -58,71 +58,87 @@ public class hammeBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        switch (currentState)
+        // if king exists OR in awakening state
+        if (gameManager.kingExists || currentState == State.Awakening)
         {
-            case State.Awakening:
-                // while hammer is not within 1f of desired position
-                if (Vector3.Distance(transform.position, desiredPosition) > 1f)
-                {
-                    // move hammer towards desired position
-                    ElasticMovement();
-                }
-                else
-                {
-                    // set state to following
-                    enterState(State.Following);
-                }
+            // if king is in ragdoll state
+            if (gameManager.King.GetComponent<MouseBehaviour>().currentState == MouseBehaviour.MouseState.Ragdoll)
+            {
+                // set state to awakening
+                enterState(State.Awakening);
+            }
+            switch (currentState)
+            {
+                case State.Awakening:
+                    // while hammer is not within 1f of desired position
+                    if (Vector3.Distance(transform.position, desiredPosition) > 1f)
+                    {
+                        // move hammer towards desired position
+                        ElasticMovement();
+                    }
+                    else
+                    {
+                        // set state to following
+                        enterState(State.Following);
+                    }
 
-                break;
-            case State.Following:
-                // set desired position to crown position
-                if (gameManager.King.GetComponent<MouseBehaviour>().currentState != MouseBehaviour.MouseState.Ragdoll)
-                { getDesiredPosition(yOffSet: floatingHeight); }
+                    break;
+                case State.Following:
+                    // set desired position to crown position
+                    if (gameManager.King.GetComponent<MouseBehaviour>().currentState != MouseBehaviour.MouseState.Ragdoll)
+                    { getDesiredPosition(yOffSet: floatingHeight); }
 
-                // while hammer is not within 1f of desired position
-                Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
-                if (Vector3.Distance(transform.position, desiredPosition) > 1f)
-                {
-                    elasticSpeed = elasticSpeed*0.97f;
-                    // move hammer towards desired position
-                    ElasticMovement(elasticSpeed);
-                }
-                else
-                {
-                    enterState(State.Telegraphing);
-                }
-                break;
-            case State.Telegraphing:
-                // set desired position to crown position
-                // while hammer is not within 1f of desired position
-                Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
-                if (Vector3.Distance(transform.position, desiredPosition) > 1f)
-                {
-                    // move hammer towards desired position
-                    AggressiveMovement(acceleration: 0.7f);
-                }
-                else
-                {
-                    // set state to striking
-                    enterState(State.Striking);
-                }
-                break;
-            case State.Striking:
-                // set desired position to crown position
-                // while hammer is not within 1f of desired position
-                Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
-                if (Vector3.Distance(transform.position, desiredPosition) > 1f)
-                {
-                    // move hammer towards desired position
-                    AggressiveMovement(acceleration: 0.75f);
-                }
-                else
-                {
-                    Strike();
-                    enterState(State.Following);
-                }
-                break;
+                    // while hammer is not within 1f of desired position
+                    Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
+                    if (Vector3.Distance(transform.position, desiredPosition) > 1f)
+                    {
+                        elasticSpeed = elasticSpeed * 0.97f;
+                        // move hammer towards desired position
+                        ElasticMovement(elasticSpeed);
+                    }
+                    else
+                    {
+                        enterState(State.Telegraphing);
+                    }
+                    break;
+                case State.Telegraphing:
+                    // set desired position to crown position
+                    // while hammer is not within 1f of desired position
+                    Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
+                    if (Vector3.Distance(transform.position, desiredPosition) > 1f)
+                    {
+                        // move hammer towards desired position
+                        AggressiveMovement(acceleration: 0.7f);
+                    }
+                    else
+                    {
+                        // set state to striking
+                        enterState(State.Striking);
+                    }
+                    break;
+                case State.Striking:
+                    // set desired position to crown position
+                    // while hammer is not within 1f of desired position
+                    Rotator(desiredRotation.x, desiredRotation.y, desiredRotation.z);
+                    if (Vector3.Distance(transform.position, desiredPosition) > 1f)
+                    {
+                        // move hammer towards desired position
+                        AggressiveMovement(acceleration: 0.75f);
+                    }
+                    else
+                    {
+                        Strike();
+                        enterState(State.Following);
+                    }
+                    break;
+            }
+        }
+        else if (currentState != State.Awakening)
+        {
+            // set desired position to crown position
+            desiredPosition.y = 100;
+            // while hammer is not within 1f of desired position
+            ElasticMovement();
         }
     }
 

@@ -15,7 +15,7 @@ public class MouseBehaviour : MonoBehaviour
 
     public bool isKing = false;
 
-    public float pushForce = 4000f;
+    public float pushForce = 40f;
     
     private GameObject MouseCrown;
     public enum MouseState
@@ -75,6 +75,7 @@ public class MouseBehaviour : MonoBehaviour
     /// </summary>
     void Update() //! This needs refactoring
     {
+        _isActive = true;
         if ( transform.position.y < -10)
         {
             IsDead = true;
@@ -247,6 +248,7 @@ public class MouseBehaviour : MonoBehaviour
                 isKing = true;
                 // set the king in the game manager
                 gameManager.appointKing(gameObject);
+                kingMe();   
                 // log the king
                 //Debug.Log("King");
                 // set the collided crown to be inactive

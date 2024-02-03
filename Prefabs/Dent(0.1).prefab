@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: -4683669308469848369, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -67,6 +71,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
       propertyPath: m_Name
       value: Dent(0.1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 43725f1c97cc74d5ab42a7c2cf66469f, type: 3}
       propertyPath: m_TagString
@@ -208,7 +216,7 @@ MonoBehaviour:
   _isActive: 0
   _isOnGround: 1
   isKing: 0
-  pushForce: 4000
+  pushForce: 0
   currentState: 0
 --- !u!114 &2043436590635042412
 MonoBehaviour:
@@ -223,9 +231,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joystick: {fileID: 0}
-  pushForce: 4000
+  pushForce: 0
   speed: 10
-  viewDistance: 10
+  viewDistance: 5
 --- !u!114 &1944860717060066231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +270,10 @@ PrefabInstance:
     - target: {fileID: 4903211314344944267, guid: 908047bde253f4bc8804c94af8299467, type: 3}
       propertyPath: m_Name
       value: MouseCrown
+      objectReference: {fileID: 0}
+    - target: {fileID: 4903211314344944267, guid: 908047bde253f4bc8804c94af8299467, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4903211314344944267, guid: 908047bde253f4bc8804c94af8299467, type: 3}
       propertyPath: m_IsActive

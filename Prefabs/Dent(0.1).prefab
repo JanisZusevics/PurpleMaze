@@ -206,6 +206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isActive: 0
+  _isOnGround: 1
   isKing: 0
   pushForce: 4000
   currentState: 0

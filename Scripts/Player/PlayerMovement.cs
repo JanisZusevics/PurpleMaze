@@ -67,12 +67,11 @@ public class PlayerMovement : MonoBehaviour
                 otherRb.AddForce(-direction * pushForce);
             }
         }
-        if (movement != Vector3.zero)
+        if (movement != Vector3.zero && MouseBehaviour.currentState == MouseBehaviour.MouseState.Moving)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.15F);
         }
         // reset rotation
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0), 0.1f);
     }
 
 }

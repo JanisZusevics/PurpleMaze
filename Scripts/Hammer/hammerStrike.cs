@@ -140,6 +140,7 @@ public class HammerStrike : MonoBehaviour
         foreach (Collider hitCollider in hitColliders)
         {
             MouseBehaviour mouseBehaviour = hitCollider.gameObject.GetComponent<MouseBehaviour>();
+            mouseBehaviour._isOnGround = false;
             if (mouseBehaviour != null && mouseBehaviour.IsActive)
             {
                 Rigidbody playerRigidbody = hitCollider.gameObject.GetComponent<Rigidbody>();
@@ -151,7 +152,8 @@ public class HammerStrike : MonoBehaviour
 
                     // Calculate the direction from the hammer to the mouse
                     Vector3 direction = (hitCollider.transform.position - transform.position).normalized + Vector3.up;
-
+                    
+                    mouseBehaviour._isOnGround = false;
                     // Apply the force in the calculated direction
                     playerRigidbody.AddForce(direction * force, ForceMode.Impulse);
                     // shake the main camera

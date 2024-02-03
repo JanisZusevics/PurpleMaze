@@ -9,7 +9,7 @@ public class MouseBehaviour : MonoBehaviour
 
     public bool _isActive = false;
     private bool _isDead = false;   // Tracks if the mouse is dead
-    private bool _isOnGround = true; // Tracks if the mouse is on the ground
+    public bool _isOnGround = true; // Tracks if the mouse is on the ground
     private int groundContactCount = 0; // Tracks the number of ground contacts
 
 
@@ -75,6 +75,26 @@ public class MouseBehaviour : MonoBehaviour
     /// </summary>
     void Update() //! This needs refactoring
     {
+        if ( transform.position.y < -10)
+        {
+            IsDead = true;
+            UpdateState();
+        }
+        if (transform.position.y > 2)
+        {
+            _isOnGround = false;
+            UpdateState();
+        }
+        if (_isOnGround && transform.position.y < 2)
+        {
+            // get mouse rotation
+            Vector3 rotation = transform.rotation.eulerAngles;
+            // set x and z rotation to 0
+            rotation.x = 0;
+            rotation.z = 0;
+            // set the rotation to the new rotation
+            transform.rotation = Quaternion.Euler(rotation);
+        }
         if (isKing)
         {
             // Toggle crown
@@ -141,7 +161,15 @@ public class MouseBehaviour : MonoBehaviour
                 Debug.DrawLine(transform.position, gameManager.Crown.transform.position, Color.blue);
                 break;
             case MouseState.Ragdoll:
-                // Ragdoll logic here
+                if (transform.position.y > 2)
+                {
+                    // decrese the x axis rotation of the mouse
+                    transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x - (1f * Time.deltaTime * 1000), transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+                    }
+                if (_isOnGround)
+                {
+                    UpdateState();
+                }
                 break;
             case MouseState.Idle:
                 // Idle logic here
@@ -151,7 +179,7 @@ public class MouseBehaviour : MonoBehaviour
                 if (_isOnGround)
                 {
                     //if the mouse is on the ground and the playerMover is outside range, set the state to moving
-                    currentState = MouseState.Moving;
+                    UpdateState();
                 }
                 break;
             case MouseState.Death:

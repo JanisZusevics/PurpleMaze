@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     private Follower follower;
 
     // KING VARIABLES
-    public float pushForce = 40f;
+    public float pushForce = 4000f;
 
     // GENERAL variables
     public float speed = 10f; // Movement speed

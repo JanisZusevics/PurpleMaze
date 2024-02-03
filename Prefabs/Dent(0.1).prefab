@@ -208,8 +208,7 @@ MonoBehaviour:
   _isActive: 0
   _isOnGround: 1
   isKing: 0
-  pushForce: 400
-  xRotationSpeed: 0.0001
+  pushForce: 4000
   currentState: 0
 --- !u!114 &2043436590635042412
 MonoBehaviour:

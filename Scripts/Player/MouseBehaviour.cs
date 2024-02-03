@@ -15,7 +15,7 @@ public class MouseBehaviour : MonoBehaviour
 
     public bool isKing = false;
 
-    public float pushForce = 400f;
+    public float pushForce = 4000f;
     
     private GameObject MouseCrown;
     public enum MouseState
@@ -87,13 +87,11 @@ public class MouseBehaviour : MonoBehaviour
         }
         if (_isOnGround && transform.position.y < 3)
         {
-            // get mouse rotation
-            Vector3 rotation = transform.rotation.eulerAngles;
-            // set x and z rotation to 0
-            rotation.x = 0;
-            rotation.z = 0;
-            // set the rotation to the new rotation
-            transform.rotation = Quaternion.Euler(rotation);
+            resetRotation();
+            resetRotation();
+            resetRotation();
+            resetRotation();
+            resetRotation();
         }
         if (isKing)
         {
@@ -167,8 +165,14 @@ public class MouseBehaviour : MonoBehaviour
                     transform.Rotate(-Vector3.right * 200 * Time.deltaTime);
 
                 }
+                else
+                {
+                    // reset the rotation of the mouse
+                    resetRotation();
+                }
                 if (_isOnGround)
                 {
+                    resetRotation();
                     UpdateState();
                 }
                 break;
@@ -197,18 +201,22 @@ public class MouseBehaviour : MonoBehaviour
     }
 
 
+    private void resetRotation()
+    {
+        // get mouse rotation
+        Vector3 rotation = transform.rotation.eulerAngles;
+        // set x and z rotation to 0
+        rotation.x = 0;
+        rotation.z = 0;
+        // set the rotation to the new rotation
+        transform.rotation = Quaternion.Euler(rotation);
+    }
     void OnCollisionEnter(Collision collision)
     {
         // if collide with ground
         if (collision.gameObject.CompareTag("Ground"))
         {
-            // get mouse rotation
-            Vector3 rotation = transform.rotation.eulerAngles;
-            // set x and z rotation to 0
-            rotation.x = 0;
-            rotation.z = 0;
-            // set the rotation to the new rotation
-            transform.rotation = Quaternion.Euler(rotation);
+            resetRotation();
 
             groundContactCount++;
             UpdateState();
@@ -287,5 +295,7 @@ public class MouseBehaviour : MonoBehaviour
     }
     public void kingMe(){
         isKing = true;
+        gameObject.layer = LayerMask.NameToLayer("King");
+
     }
 }

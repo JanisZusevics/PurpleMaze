@@ -85,7 +85,7 @@ public class MouseBehaviour : MonoBehaviour
             _isOnGround = false;
             UpdateState();
         }
-        if (_isOnGround && transform.position.y < 2)
+        if (_isOnGround && transform.position.y < 3)
         {
             // get mouse rotation
             Vector3 rotation = transform.rotation.eulerAngles;
@@ -161,11 +161,12 @@ public class MouseBehaviour : MonoBehaviour
                 Debug.DrawLine(transform.position, gameManager.Crown.transform.position, Color.blue);
                 break;
             case MouseState.Ragdoll:
-                if (transform.position.y > 2)
+                if (transform.position.y > 3)
                 {
-                    // decrese the x axis rotation of the mouse
-                    transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x - (1f * Time.deltaTime * 1000), transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
-                    }
+                    // constamtly retate the mouse against the x axis 
+                    transform.Rotate(-Vector3.right * 200 * Time.deltaTime);
+
+                }
                 if (_isOnGround)
                 {
                     UpdateState();
@@ -201,6 +202,14 @@ public class MouseBehaviour : MonoBehaviour
         // if collide with ground
         if (collision.gameObject.CompareTag("Ground"))
         {
+            // get mouse rotation
+            Vector3 rotation = transform.rotation.eulerAngles;
+            // set x and z rotation to 0
+            rotation.x = 0;
+            rotation.z = 0;
+            // set the rotation to the new rotation
+            transform.rotation = Quaternion.Euler(rotation);
+
             groundContactCount++;
             UpdateState();
         }

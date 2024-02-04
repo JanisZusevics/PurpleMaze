@@ -105,7 +105,8 @@ public class MouseBehaviour : MonoBehaviour
             {
                 // log ocunt 
                 //Debug.Log($"Count: {count}");
-                if (hitCollider.CompareTag("Mouse"))
+                // if the hit collider is a mouse and is not in layer 8 or 9
+                if (hitCollider.CompareTag("Mouse") && hitCollider.gameObject.layer != 8 && hitCollider.gameObject.layer != 9)
                 {
                     
                     MouseBehaviour mouseBehaviour = hitCollider.gameObject.GetComponent<MouseBehaviour>();

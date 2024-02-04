@@ -75,7 +75,7 @@ public class Follower : MonoBehaviour //! Needs rework ! Perhaps a state machine
 
         foreach (var hitCollider in hitColliders)
         {
-            if (hitCollider.CompareTag("Mouse") && hitCollider.gameObject != gameObject)
+            if (hitCollider.CompareTag("Mouse") && hitCollider.gameObject != gameObject && hitCollider.gameObject.layer != 8 && hitCollider.gameObject.layer != 9)
             {
                 Rigidbody otherRb = hitCollider.GetComponent<Rigidbody>();
 

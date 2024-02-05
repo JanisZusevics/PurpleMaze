@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class GameManager : MonoBehaviour
         // spawn in a crown aove the dent prefab at y + 20
         Crown.transform.position = new Vector3(King.transform.position.x, King.transform.position.y + 20, King.transform.position.z);
     }
+
 
     void Update()
     {
@@ -80,4 +82,9 @@ public class GameManager : MonoBehaviour
         kingExists = false;
         King = null;
     }
+    public void AddMouse(GameObject mouse)
+    {
+        AllMice = AllMice.Concat(new[] { mouse }).ToArray();
+    }
+    
 }

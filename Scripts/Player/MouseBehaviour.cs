@@ -62,11 +62,15 @@ public class MouseBehaviour : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         follower = GetComponent<Follower>();
         MouseCrown = transform.Find("MouseCrown").gameObject;
+        _isActive = true;
+
     }
 
     void Start()
     {
-
+        _isActive = true;
+        gameManager.PlayerStateChanged(_isActive);
+   
         UpdateState(); // Initialize the state
     }
 
@@ -75,7 +79,6 @@ public class MouseBehaviour : MonoBehaviour
     /// </summary>
     void Update() //! This needs refactoring
     {
-        _isActive = true;
         if ( transform.position.y < -10)
         {
             IsDead = true;

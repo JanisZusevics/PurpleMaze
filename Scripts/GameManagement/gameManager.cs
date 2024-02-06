@@ -22,9 +22,6 @@ public class GameManager : MonoBehaviour
     {
         // spawn in a dent prefab 
         King = Instantiate(dentPrefab, transform.position, transform.rotation);
-       // appointKing(King);
-        //King.GetComponent<MouseBehaviour>().isKing = true;
-        //King.GetComponent<MouseBehaviour>().IsActive = true;
 
         // spawn in a crown aove the dent prefab at y + 20
         Crown.transform.position = new Vector3(King.transform.position.x, King.transform.position.y + 20, King.transform.position.z);

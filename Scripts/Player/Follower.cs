@@ -48,10 +48,8 @@ public class Follower : MonoBehaviour //! Needs rework ! Perhaps a state machine
     public void Follow()
     {
         Vector3 boidDirection = CalculateBoidBehavior(); // Calculate the direction the mouse should move in
-        //Debug.Log($"Boid Direction: {boidDirection}");// log boid direction
         Vector3 crownDirection = (gameManager.Crown.transform.position - transform.position).normalized; // Calculate the direction to the crown
         Vector3 combinedDirection = boidDirection * (1 - crownWeight) + crownDirection * crownWeight; // Combine the boid direction and crown direction
-        //Debug.Log($"Combined Direction: {combinedDirection}"); // log combined direction
         Move(combinedDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0), 0.1f); // Orient the mouse to face the direction of movement on the x and z axes
 
@@ -120,8 +118,6 @@ public class Follower : MonoBehaviour //! Needs rework ! Perhaps a state machine
                                + cohesionPoint * cohesionWeight 
                                + -separationDirection * separationWeight * currentTurnSpeed 
                                + joystickDirection * joystickWeight).normalized;
-        // log boid direction with weights
-        //Debug.Log($"Boid Direction: {boidDirection}\nAlign Velocity: {alignVelocity}\nCohesion Point: {cohesionPoint}\nSeparation Direction: {separationDirection}\nJoystick Direction: {joystickDirection}");
         return boidDirection;
     }
     // Calculate the turn speed based on the separation direction and number of mice within the separation threshold
@@ -139,8 +135,6 @@ public class Follower : MonoBehaviour //! Needs rework ! Perhaps a state machine
             // magnify the turn speed of the mouse by the number of mice within the separation threshold
             currentTurnSpeed *= separationCount;
         }
-        // log the current and max speed
-        //Debug.Log($"Current Turn Speed: {currentTurnSpeed}\nMax Turn Speed: {maxTurnSpeed}");
         return Mathf.Min(currentTurnSpeed, maxTurnSpeed);
     }
 

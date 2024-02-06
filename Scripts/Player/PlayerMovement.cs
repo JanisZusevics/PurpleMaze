@@ -36,7 +36,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void KingMover()
     {
-        // 
         joystick.gameObject.SetActive(true);
         float moveHorizontal = joystick.Horizontal;
         float moveVertical = joystick.Vertical;
@@ -55,8 +54,6 @@ public class PlayerMovement : MonoBehaviour
         {
             if (hitCollider.CompareTag("Mouse") && hitCollider.gameObject.GetComponent<MouseBehaviour>().IsActive && hitCollider.gameObject != gameObject)
             {
-                // debug draw into sky from mouse
-                //Debug.DrawLine(hitCollider.transform.position, hitCollider.transform.position + Vector3.up * 100, Color.red);
                 // get the rigidbody of the mouse
                 Rigidbody otherRb = hitCollider.GetComponent<Rigidbody>();
                 // get the direction from the mouse to the king
@@ -71,7 +68,5 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.15F);
         }
-        // reset rotation
     }
-
 }

@@ -59,6 +59,7 @@ public class ObjectDestroyer : MonoBehaviour
         }
     }
 
+    # manage the shadows of all objects with the specified tags
     IEnumerator ManageShadows()
     {
         while (true)

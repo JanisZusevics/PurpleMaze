@@ -32,6 +32,8 @@ public class CameraShake : MonoBehaviour
             float y = Random.Range(-1f, 1f) * shakeMagnitude;
             float z = Random.Range(-1f, 1f) * shakeMagnitude;
 
+
+            
             // create offset vector
             Vector3 offset = new Vector3(x, y, z);
 

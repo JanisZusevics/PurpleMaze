@@ -66,7 +66,9 @@ public class PlayerMovement : MonoBehaviour
         }
         if (movement != Vector3.zero && MouseBehaviour.currentState == MouseBehaviour.MouseState.Moving)
         {
+            // rotate the king to face the direction of movement
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.15F);
         }
+
     }
 }

@@ -66,7 +66,7 @@ public class PlayerMovement : MonoBehaviour
         }
         // literally fake shto 
         // more usel
-        
+        // mo way 
         if (movement != Vector3.zero && MouseBehaviour.currentState == MouseBehaviour.MouseState.Moving)
         {
             // rotate the king to face the direction of movement
